@@ -9,7 +9,10 @@ use App\Http\Controllers\Admin\EmployeeController;    // Contoh controller admin
 use App\Http\Controllers\Admin\GateController;        // Contoh controller admin
 use App\Http\Controllers\Admin\CardController;        // Contoh controller admin
 use App\Http\Controllers\Admin\UserController;        // Contoh controller admin
-use App\Http\Controllers\HR\ReportController;         // Contoh controller HR
+use App\Http\Controllers\ReportController;         // Contoh controller HR
+use App\Http\Controllers\TappingController;
+use App\Http\Controllers\Admin\LogController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,11 +35,19 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 });
+    // Halaman Tapping (Publik)
+Route::get('/tapping/{gate}', [TappingController::class, 'index'])->name('tapping.index');
 
+// API Untuk Proses Tapping
+Route::post('/api/tap', [TappingController::class, 'tap'])->name('api.tap.process');
+
+// ROUTE BARU: API untuk mengambil menu aktif secara dinamis
+Route::get('/api/tapping/{gate}/menu', [TappingController::class, 'getActiveMenu'])->name('api.tapping.menu');
+    
 
 // --- Grup Route untuk Pengguna yang Sudah Login ---
 Route::middleware(['auth'])->group(function () {
-    
+
     // Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -50,17 +61,26 @@ Route::middleware(['auth'])->group(function () {
     |
     */
     // Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
-        
-        // Contoh: Route untuk mengatur jadwal
-        // Route::get('/schedules/create', [ScheduleController::class, 'create'])->name('schedules.create');
-        // Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
-        
-        // Resource Controllers untuk Master Data
-        // Route::resource('menus', MenuController::class);
-        // Route::resource('employees', EmployeeController::class);
-        // Route::resource('gates', GateController::class);
-        // Route::resource('cards', CardController::class);
-        // Route::resource('users', UserController::class);
+
+    // Contoh: Route untuk mengatur jadwal
+    Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules.index'); // <-- ROUTE BARU
+    Route::get('/schedules/create', [ScheduleController::class, 'create'])->name('schedules.create');
+    Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('/schedules/{schedule}', [ScheduleController::class, 'show'])->name('schedules.show'); // <-- ROUTE BARU
+    Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy'); // <-- ROUTE BARU
+
+    // Resource Controllers untuk Master Data
+    Route::resource('menus', MenuController::class);
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('gates', GateController::class);
+    Route::resource('cards', CardController::class);
+    // Route::resource('users', UserController::class);
+
+     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    Route::get('/logs/{employee}', [LogController::class, 'show'])->name('logs.show'); // <-- Route baru untuk detail
+    Route::get('/reports/consumption', [ReportController::class, 'consumption'])->name('reports.consumption');
+     Route::get('/reports/consumption/{menu}', [ReportController::class, 'consumptionDetail'])->name('reports.consumption.detail');
+
 
     // });
 
@@ -71,9 +91,9 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     // Route::middleware(['role:hr'])->prefix('hr')->name('hr.')->group(function () {
-        
-        // Contoh: Route untuk Laporan
-        // Route::get('/reports/consumption', [ReportController::class, 'consumption'])->name('reports.consumption');
+
+    // Contoh: Route untuk Laporan
+
 
     // });
 

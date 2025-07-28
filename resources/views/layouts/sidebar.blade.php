@@ -22,12 +22,18 @@
 
     {{-- Menu Khusus Admin --}}
     @if(auth()->user()->role == 'admin')
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-calendar-alt text-primary"></i>
-                <span class="ml-2">Atur Jadwal Makan</span>
-            </a>
-        </li>
+     <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSchedules">
+        <i class="fas fa-fw fa-calendar-alt text-primary"></i>
+        <span class="ml-2">Atur Jadwal Makan</span>
+    </a>
+    <div id="collapseSchedules" class="collapse" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="{{ route('schedules.index') }}">Daftar Jadwal</a>
+            <a class="collapse-item" href="{{ route('schedules.create') }}">Buat Jadwal Baru</a>
+        </div>
+    </div>
+</li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMasterData">
@@ -37,14 +43,16 @@
             <div id="collapseMasterData" class="collapse" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Database Sistem:</h6>
-                    <a class="collapse-item" href="#">Kelola Menu</a>
-                    <a class="collapse-item" href="#">Kelola Karyawan</a>
-                    <a class="collapse-item" href="#">Kelola Counter</a>
+                    <a class="collapse-item" href="{{ route('menus.index') }}">Kelola Menu</a>
+
+                    <a class="collapse-item" href="{{ route('employees.index') }}">Kelola Karyawan</a>
+                    <a class="collapse-item" href="{{ route('cards.index') }}">Manajemen Kartu</a>
+                    <a class="collapse-item" href="{{ route('gates.index') }}">Kelola Counter</a>
                 </div>
             </div>
         </li>
     @endif
-    
+
     <hr class="sidebar-divider">
 
     <div class="sidebar-heading">
@@ -53,18 +61,18 @@
 
     {{-- Menu untuk HR dan juga Admin --}}
     @if(in_array(auth()->user()->role, ['admin', 'hr']))
-        <li class="nav-item">
-            <a class="nav-link" href="#">
+       <li class="nav-item">
+            <a class="nav-link" href="{{ route('reports.consumption') }}"> {{-- <-- UBAH DI SINI --}}
                 <i class="fas fa-fw fa-chart-bar text-primary"></i>
                 <span class="ml-2">Laporan Konsumsi</span>
             </a>
         </li>
     @endif
-    
+
     {{-- Menu Khusus Admin --}}
     @if(auth()->user()->role == 'admin')
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('logs.index') }}"> {{-- <-- UBAH DI SINI --}}
                 <i class="fas fa-fw fa-history text-primary"></i>
                 <span class="ml-2">Log Transaksi</span>
             </a>
