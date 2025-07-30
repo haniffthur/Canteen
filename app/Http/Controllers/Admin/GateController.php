@@ -8,10 +8,18 @@ use Illuminate\Http\Request;
 
 class GateController extends Controller
 {
-    public function index()
+     public function index()
     {
-        $gates = Gate::latest()->paginate(10);
-        return view('gates.index', compact('gates'));
+        // Ambil data gate yang dipaginasi untuk tabel utama
+        $paginatedGates = Gate::latest()->paginate(10);
+        
+        // Ambil SEMUA gate untuk ditampilkan di dalam modal
+        $allGates = Gate::orderBy('name')->get();
+
+        return view('gates.index', [
+            'gates' => $paginatedGates,
+            'allGates' => $allGates
+        ]);
     }
 
     public function create()
@@ -58,5 +66,24 @@ class GateController extends Controller
     {
         $gate->delete();
         return redirect()->route('gates.index')->with('success', 'Counter berhasil dihapus.');
+    }
+      public function bulkUpdateTime(Request $request)
+    {
+        $validated = $request->validate([
+            'gate_ids'   => 'required|array|min:1',
+            'gate_ids.*' => 'exists:gates,id',
+            'start_time' => 'required|date_format:H:i',
+            'stop_time'  => 'required|date_format:H:i|after:start_time',
+        ], [
+            'gate_ids.required' => 'Anda harus memilih setidaknya satu gate.',
+        ]);
+
+        // Update semua gate yang dipilih dalam satu query
+        Gate::whereIn('id', $validated['gate_ids'])->update([
+            'start_time' => $validated['start_time'],
+            'stop_time'  => $validated['stop_time'],
+        ]);
+
+        return redirect()->route('gates.index')->with('success', 'Jam operasional untuk gate yang dipilih berhasil diperbarui.');
     }
 }

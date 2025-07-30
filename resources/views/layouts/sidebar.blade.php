@@ -23,16 +23,18 @@
     {{-- Menu Khusus Admin --}}
     @if(auth()->user()->role == 'admin')
      <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSchedules">
-        <i class="fas fa-fw fa-calendar-alt text-primary"></i>
-        <span class="ml-2">Atur Jadwal Makan</span>
-    </a>
-    <div id="collapseSchedules" class="collapse" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="{{ route('schedules.index') }}">Daftar Jadwal</a>
-            <a class="collapse-item" href="{{ route('schedules.create') }}">Buat Jadwal Baru</a>
-        </div>
-    </div>
+        <a class="nav-link" href="{{ route('move-menu.create') }}">
+            <i class="fas fa-fw fa-random text-primary"></i>
+            <span class="ml-2">Pindah Menu</span>
+        </a>
+    </li>
+     <li class="nav-item">
+        <a class="nav-link" href="{{ route('schedules.index') }}">
+            <i class="fas fa-fw fa-calendar-alt text-primary"></i>
+            <span class="ml-2">Jadwal Makan</span>
+        </a>
+    </li>
+    
 </li>
 
         <li class="nav-item">

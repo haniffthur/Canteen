@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\UserController;        // Contoh controller admin
 use App\Http\Controllers\ReportController;         // Contoh controller HR
 use App\Http\Controllers\TappingController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\MoveMenuController;
+
 
 
 /*
@@ -50,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api/dashboard-data', [DashboardController::class, 'getDashboardData'])->name('api.dashboard.data');
 
     /*
     |--------------------------------------------------------------------------
@@ -72,7 +75,11 @@ Route::middleware(['auth'])->group(function () {
     // Resource Controllers untuk Master Data
     Route::resource('menus', MenuController::class);
     Route::resource('employees', EmployeeController::class);
+
+
     Route::resource('gates', GateController::class);
+    Route::post('gates/bulk-update-time', [GateController::class, 'bulkUpdateTime'])->name('gates.bulkUpdateTime');
+
     Route::resource('cards', CardController::class);
     // Route::resource('users', UserController::class);
 
@@ -81,7 +88,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/consumption', [ReportController::class, 'consumption'])->name('reports.consumption');
      Route::get('/reports/consumption/{menu}', [ReportController::class, 'consumptionDetail'])->name('reports.consumption.detail');
 
-
+Route::get('/move-menu', [MoveMenuController::class, 'create'])->name('move-menu.create');
+    Route::post('/move-menu', [MoveMenuController::class, 'store'])->name('move-menu.store');
     // });
 
 
