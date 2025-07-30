@@ -2,7 +2,7 @@
 
 Sistem Kantin Karyawan adalah aplikasi web berbasis Laravel 10 yang dirancang untuk mengelola dan memonitor proses pengambilan jatah makan karyawan di sebuah perusahaan. Sistem ini menggantikan proses manual dengan sistem tapping kartu RFID/NFC yang terintegrasi, menyediakan data real-time, dan mempermudah proses pelaporan.
 
-![Tampilan Antarmuka Tapping](https://imgur.com/a/XeY9lYX) 
+![Tampilan Antarmuka Tapping](https://imgur.com/gallery/tapping-views-XeY9lYX) 
 *Ganti dengan screenshot antarmuka tappingmu*
 
 ---
