@@ -142,4 +142,23 @@ class TappingController extends Controller
             'employee_name' => $employee->name,
         ]);
     }
+    public function getActiveMenu(Gate $gate)
+    {
+        $now = Carbon::now();
+        $mealType = $now->hour >= 17 ? 'dinner' : 'lunch';
+
+        $activeSchedule = MealSchedule::where('meal_date', $now->toDateString())
+            ->where('meal_type', $mealType)
+            ->first();
+
+        $activeMenus = [];
+        if ($activeSchedule) {
+            $activeMenus = CounterMenu::where('meal_schedule_id', $activeSchedule->id)
+                ->where('gate_id', $gate->id)
+                ->with('menu') // Eager load relasi menu
+                ->get();
+        }
+
+        return response()->json($activeMenus);
+    }
 }

@@ -31,7 +31,7 @@ class MenuController extends Controller
 
         Menu::create($validated);
 
-        return redirect()->route('admin.menus.index')->with('success', 'Menu berhasil ditambahkan.');
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil ditambahkan.');
     }
 
     public function edit(Menu $menu)
@@ -50,12 +50,12 @@ class MenuController extends Controller
 
         $menu->update($validated);
 
-        return redirect()->route('admin.menus.index')->with('success', 'Menu berhasil diperbarui.');
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil diperbarui.');
     }
 
     public function destroy(Menu $menu)
     {
         $menu->delete();
-        return redirect()->route('admin.menus.index')->with('success', 'Menu berhasil dihapus.');
+        return redirect()->route('menus.index')->with('success', 'Menu berhasil dihapus.');
     }
 }

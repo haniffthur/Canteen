@@ -13,6 +13,7 @@ use App\Http\Controllers\ReportController;         // Contoh controller HR
 use App\Http\Controllers\TappingController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\MoveMenuController;
+use App\Http\Controllers\WaiterViewController;
 
 
 
@@ -26,7 +27,7 @@ use App\Http\Controllers\Admin\MoveMenuController;
 // Menggunakan method yang lebih umum di Laravel: showLoginForm, login, logout
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 // --- Halaman Utama ---
@@ -45,6 +46,9 @@ Route::post('/api/tap', [TappingController::class, 'tap'])->name('api.tap.proces
 
 // ROUTE BARU: API untuk mengambil menu aktif secara dinamis
 Route::get('/api/tapping/{gate}/menu', [TappingController::class, 'getActiveMenu'])->name('api.tapping.menu');
+
+Route::get('/waiter-view/{gate}', [WaiterViewController::class, 'index'])->name('waiter-view.index');
+Route::get('/api/waiter-view/{gate}/logs', [WaiterViewController::class, 'getLatestLogs'])->name('api.waiter-view.logs');
     
 
 // --- Grup Route untuk Pengguna yang Sudah Login ---
@@ -76,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('menus', MenuController::class);
     Route::resource('employees', EmployeeController::class);
 
-
+ Route::resource('users', UserController::class);
     Route::resource('gates', GateController::class);
     Route::post('gates/bulk-update-time', [GateController::class, 'bulkUpdateTime'])->name('gates.bulkUpdateTime');
 

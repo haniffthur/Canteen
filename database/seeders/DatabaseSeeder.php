@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             GateSeeder::class,
             MenuSeeder::class,
+            EmployeeAndCardSeeder::class, // <-- TAMBAHKAN INI
         ]);
     }
 }
