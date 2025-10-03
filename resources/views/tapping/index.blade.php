@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +21,7 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100%;
+            height: 100%; /* PENYESUAIAN LAYOUT */
             padding: 1.5rem;
             color: #1a202c;
             overflow: hidden;
@@ -31,9 +30,9 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            height: 100%; /* PENYESUAIAN LAYOUT */
+            display: flex; /* PENYESUAIAN LAYOUT */
+            flex-direction: column; /* PENYESUAIAN LAYOUT */
         }
 
         .header {
@@ -45,7 +44,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0;
+            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
         }
 
         .header h1 {
@@ -79,27 +78,27 @@
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            flex-grow: 1; /* PENYESUAIAN LAYOUT */
+            display: flex; /* PENYESUAIAN LAYOUT */
+            flex-direction: column; /* PENYESUAIAN LAYOUT */
+            overflow: hidden; /* PENYESUAIAN LAYOUT */
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            flex-grow: 1;
-            overflow: hidden;
+            flex-grow: 1; /* PENYESUAIAN LAYOUT */
+            overflow: hidden; /* PENYESUAIAN LAYOUT */
         }
-
+        
         .menu-section {
             background: #f7fafc;
             border-radius: 12px;
             padding: 1.5rem;
             border: 2px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
+            display: flex; /* PENYESUAIAN LAYOUT */
+            flex-direction: column; /* PENYESUAIAN LAYOUT */
         }
 
         .menu-section h2 {
@@ -110,7 +109,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-shrink: 0;
+            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
         }
 
         .menu-section h2 i {
@@ -122,8 +121,8 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            overflow-y: auto;
-            padding-right: 0.5rem;
+            overflow-y: auto; /* PENYESUAIAN LAYOUT */
+            padding-right: 0.5rem; /* PENYESUAIAN LAYOUT */
         }
 
         .menu-item {
@@ -136,12 +135,11 @@
             align-items: center;
             transition: all 0.2s ease;
             cursor: default;
-            flex-shrink: 0;
+            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
         }
 
         .menu-item.clickable {
             cursor: pointer;
-            position: relative;
         }
 
         .menu-item.clickable:hover {
@@ -156,19 +154,6 @@
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            padding-left: 3rem;
-        }
-
-        .menu-item.selected::before {
-            content: '\f00c';
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1rem;
-            color: white;
         }
 
         .menu-item.selected .stock-badge {
@@ -206,8 +191,7 @@
             color: #d97706;
         }
 
-        .loading,
-        .empty-state {
+        .loading, .empty-state {
             text-align: center;
             padding: 2rem;
             color: #718096;
@@ -224,7 +208,7 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
             margin: 1.5rem 0;
-            flex-shrink: 0;
+            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
         }
 
         .input-section {
@@ -232,7 +216,7 @@
             padding: 1.5rem;
             border-radius: 12px;
             text-align: center;
-            flex-shrink: 0;
+            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
         }
 
         .input-section label {
@@ -278,7 +262,6 @@
                 gap: 1rem;
                 text-align: center;
             }
-
             .menu-grid {
                 grid-template-columns: 1fr;
             }
@@ -294,19 +277,11 @@
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="header">
@@ -328,7 +303,7 @@
                         Menu Utama / Spesial
                     </h2>
                     <div id="main-menu-list" class="menu-list">
-                    </div>
+                        </div>
                 </div>
 
                 <div class="menu-section">
@@ -337,7 +312,7 @@
                         Menu Opsional
                     </h2>
                     <div id="optional-menu-list" class="menu-list">
-                    </div>
+                        </div>
                 </div>
             </div>
 
@@ -348,8 +323,14 @@
                     <i class="fas fa-id-card"></i> Tap Kartu Karyawan
                 </label>
                 <form id="tapping-form" onsubmit="return false;">
-                    <input type="text" id="card-number-input" class="card-input" placeholder="TAP KARTU DI SINI..."
-                        autofocus autocomplete="off">
+                    <input 
+                        type="text" 
+                        id="card-number-input" 
+                        class="card-input" 
+                        placeholder="TAP KARTU DI SINI..." 
+                        autofocus
+                        autocomplete="off"
+                    >
                 </form>
             </div>
         </div>
@@ -357,158 +338,147 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mainMenuList = document.getElementById('main-menu-list');
-            const optionalMenuList = document.getElementById('optional-menu-list');
-            const tappingForm = document.getElementById('tapping-form');
-            const cardInput = document.getElementById('card-number-input');
-            const gateId = "{{ $gate->id }}";
-            const menuApiUrl = `{{ route('api.tapping.menu', $gate->id) }}`;
-            let selectedOptionalIds = [];
+    document.addEventListener('DOMContentLoaded', function() {
+        const mainMenuList = document.getElementById('main-menu-list');
+        const optionalMenuList = document.getElementById('optional-menu-list');
+        const tappingForm = document.getElementById('tapping-form');
+        const cardInput = document.getElementById('card-number-input');
+        const gateId = "{{ $gate->id }}";
+        const menuApiUrl = `{{ route('api.tapping.menu', $gate->id) }}`;
+        let selectedOptionalIds = [];
 
-            const fetchAndUpdateMenus = async () => {
-                try {
-                    const response = await fetch(menuApiUrl);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    const menus = await response.json();
+        const fetchAndUpdateMenus = async () => {
+            try {
+                const response = await fetch(menuApiUrl);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const menus = await response.json();
 
-                    mainMenuList.innerHTML = '';
-                    optionalMenuList.innerHTML = '';
+                mainMenuList.innerHTML = '';
+                optionalMenuList.innerHTML = '';
 
-                    let mainMenuFound = false;
-                    let optionalMenuFound = false;
+                let mainMenuFound = false;
+                let optionalMenuFound = false;
 
-                    menus.forEach(item => {
-                        const stockBadge = item.balance_qty !== null
-                            ? `<span class="stock-badge ${item.menu.category === 'opsional' ? 'warning' : ''}">Sisa: ${item.balance_qty}</span>`
-                            : '';
+                menus.forEach(item => {
+                    const stockBadge = item.balance_qty !== null 
+                        ? `<span class="stock-badge ${item.menu.category === 'opsional' ? 'warning' : ''}">Sisa: ${item.balance_qty}</span>` 
+                        : '';
 
-                        if (['utama', 'spesial'].includes(item.menu.category)) {
-                            const div = document.createElement('div');
-                            div.className = 'menu-item main-menu';
-                            div.innerHTML = `<span class="menu-item-name">${item.menu.name}</span> ${stockBadge}`;
-                            mainMenuList.appendChild(div);
-                            mainMenuFound = true;
-                        } else if (item.menu.category === 'opsional') {
-                            const div = document.createElement('div');
-
-                            const isSelected = selectedOptionalIds.includes(item.id.toString());
-                            div.className = `menu-item clickable ${isSelected ? 'selected' : ''}`;
-
-                            div.dataset.id = item.id;
-                            div.innerHTML = `<span class="menu-item-name">${item.menu.name}</span> ${stockBadge}`;
-                            optionalMenuList.appendChild(div);
-                            optionalMenuFound = true;
-                        }
-                    });
-
-                    if (!mainMenuFound) {
-                        mainMenuList.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>Tidak ada menu utama tersedia</p></div>';
+                    if (['utama', 'spesial'].includes(item.menu.category)) {
+                        const div = document.createElement('div');
+                        div.className = 'menu-item main-menu';
+                        div.innerHTML = `<span class="menu-item-name">${item.menu.name}</span> ${stockBadge}`;
+                        mainMenuList.appendChild(div);
+                        mainMenuFound = true;
+                    } else if (item.menu.category === 'opsional') {
+                        const div = document.createElement('div');
+                        div.className = 'menu-item clickable';
+                        div.dataset.id = item.id;
+                        div.innerHTML = `<span class="menu-item-name">${item.menu.name}</span> ${stockBadge}`;
+                        optionalMenuList.appendChild(div);
+                        optionalMenuFound = true;
                     }
-                    if (!optionalMenuFound) {
-                        optionalMenuList.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>Tidak ada menu opsional tersedia</p></div>';
-                    }
-
-                } catch (error) {
-                    console.error("Gagal memuat menu:", error);
-                    mainMenuList.innerHTML = '<div class="empty-state" style="color: #e53e3e;"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat menu</p></div>';
-                    optionalMenuList.innerHTML = '<div class="empty-state" style="color: #e53e3e;"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat menu</p></div>';
-                }
-            };
-
-            function updateClock() {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
                 });
-                document.getElementById('clock').textContent = timeString.replace(/\./g, ':');
+
+                if (!mainMenuFound) {
+                    mainMenuList.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>Tidak ada menu utama tersedia</p></div>';
+                }
+                if (!optionalMenuFound) {
+                    optionalMenuList.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>Tidak ada menu opsional tersedia</p></div>';
+                }
+
+            } catch (error) {
+                console.error("Gagal memuat menu:", error);
+                mainMenuList.innerHTML = '<div class="empty-state" style="color: #e53e3e;"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat menu</p></div>';
+                optionalMenuList.innerHTML = '<div class="empty-state" style="color: #e53e3e;"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat menu</p></div>';
             }
+        };
 
-            optionalMenuList.addEventListener('click', function (e) {
-                const menuItem = e.target.closest('.menu-item.clickable');
-                if (menuItem) {
-                    menuItem.classList.toggle('selected');
-                    const menuId = menuItem.dataset.id;
-                    if (menuItem.classList.contains('selected')) {
-                        if (!selectedOptionalIds.includes(menuId)) {
-                            selectedOptionalIds.push(menuId);
-                        }
-                    } else {
-                        selectedOptionalIds = selectedOptionalIds.filter(id => id !== menuId);
-                    }
-                    cardInput.focus();
-                }
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
             });
+            document.getElementById('clock').textContent = timeString.replace(/\./g, ':');
+        }
 
-            const showStatus = (success, message, details = {}) => {
-                Swal.fire({
-                    icon: success ? 'success' : 'error',
-                    title: success ? 'Berhasil' : 'Gagal',
-                    html: details.employee_name ? `<b style="font-size: 1.25rem;">${details.employee_name}</b><br><span style="color: #4a5568;">${message}</span>` : message,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                });
-            };
-
-            // --- PERUBAHAN ---
-            // Fungsi ini dikembalikan seperti semula untuk mereset seluruh tampilan
-            const resetInterface = () => {
-                cardInput.value = '';
+        optionalMenuList.addEventListener('click', function(e) {
+            const menuItem = e.target.closest('.menu-item.clickable');
+            if (menuItem) {
+                menuItem.classList.toggle('selected');
+                const menuId = menuItem.dataset.id;
+                if (menuItem.classList.contains('selected')) {
+                    selectedOptionalIds.push(menuId);
+                } else {
+                    selectedOptionalIds = selectedOptionalIds.filter(id => id !== menuId);
+                }
                 cardInput.focus();
-                // Baris ini mengosongkan data pilihan menu
-                selectedOptionalIds = [];
-                // Baris ini menghilangkan centang/warna dari tampilan
-                document.querySelectorAll('.menu-item.selected').forEach(item => item.classList.remove('selected'));
-            };
-            // --- AKHIR PERUBAHAN ---
-
-            tappingForm.addEventListener('submit', async function (e) {
-                e.preventDefault();
-                const cardNumber = cardInput.value.trim();
-                if (!cardNumber) return;
-
-                cardInput.disabled = true;
-
-                try {
-                    const response = await fetch("{{ route('api.tap.process') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            card_number: cardNumber,
-                            gate_id: gateId,
-                            optional_ids: selectedOptionalIds
-                        })
-                    });
-                    const result = await response.json();
-                    showStatus(response.ok, result.message, result);
-
-                    if (response.ok) {
-                        fetchAndUpdateMenus();
-                    }
-
-                } catch (error) {
-                    showStatus(false, 'Terjadi masalah koneksi.');
-                } finally {
-                    setTimeout(() => {
-                        resetInterface(); // Memanggil fungsi reset yang lengkap
-                        cardInput.disabled = false;
-                    }, 3000);
-                }
-            });
-
-            fetchAndUpdateMenus();
-            setInterval(fetchAndUpdateMenus, 30000);
-            setInterval(updateClock, 1000);
-            updateClock();
+            }
         });
+
+        const showStatus = (success, message, details = {}) => {
+            Swal.fire({
+                icon: success ? 'success' : 'error',
+                title: success ? 'Berhasil' : 'Gagal',
+                html: details.employee_name ? `<b style="font-size: 1.25rem;">${details.employee_name}</b><br><span style="color: #4a5568;">${message}</span>` : message,
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        };
+
+        const resetInterface = () => {
+            cardInput.value = '';
+            cardInput.focus();
+            selectedOptionalIds = [];
+            document.querySelectorAll('.menu-item.selected').forEach(item => item.classList.remove('selected'));
+        };
+
+        tappingForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const cardNumber = cardInput.value.trim();
+            if (!cardNumber) return;
+            
+            cardInput.disabled = true;
+
+            try {
+                const response = await fetch("{{ route('api.tap.process') }}", {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 
+                        'Accept': 'application/json' 
+                    },
+                    body: JSON.stringify({
+                        card_number: cardNumber,
+                        gate_id: gateId,
+                        optional_ids: selectedOptionalIds
+                    })
+                });
+                const result = await response.json();
+                showStatus(response.ok, result.message, result);
+
+                if (response.ok) {
+                    fetchAndUpdateMenus();
+                }
+
+            } catch (error) {
+                showStatus(false, 'Terjadi masalah koneksi.');
+            } finally {
+                setTimeout(() => {
+                    resetInterface();
+                    cardInput.disabled = false;
+                }, 3000);
+            }
+        });
+        
+        fetchAndUpdateMenus();
+        setInterval(fetchAndUpdateMenus, 30000);
+        setInterval(updateClock, 1000);
+        updateClock();
+    });
     </script>
 </body>
-
 </html>
