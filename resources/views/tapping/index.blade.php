@@ -21,7 +21,7 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100%; /* PENYESUAIAN LAYOUT */
+            height: 100%;
             padding: 1.5rem;
             color: #1a202c;
             overflow: hidden;
@@ -30,9 +30,9 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            height: 100%; /* PENYESUAIAN LAYOUT */
-            display: flex; /* PENYESUAIAN LAYOUT */
-            flex-direction: column; /* PENYESUAIAN LAYOUT */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -44,7 +44,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
+            flex-shrink: 0;
         }
 
         .header h1 {
@@ -78,18 +78,18 @@
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            flex-grow: 1; /* PENYESUAIAN LAYOUT */
-            display: flex; /* PENYESUAIAN LAYOUT */
-            flex-direction: column; /* PENYESUAIAN LAYOUT */
-            overflow: hidden; /* PENYESUAIAN LAYOUT */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            flex-grow: 1; /* PENYESUAIAN LAYOUT */
-            overflow: hidden; /* PENYESUAIAN LAYOUT */
+            flex-grow: 1;
+            overflow: hidden;
         }
         
         .menu-section {
@@ -97,8 +97,8 @@
             border-radius: 12px;
             padding: 1.5rem;
             border: 2px solid #e2e8f0;
-            display: flex; /* PENYESUAIAN LAYOUT */
-            flex-direction: column; /* PENYESUAIAN LAYOUT */
+            display: flex;
+            flex-direction: column;
         }
 
         .menu-section h2 {
@@ -109,7 +109,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
+            flex-shrink: 0;
         }
 
         .menu-section h2 i {
@@ -121,8 +121,8 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            overflow-y: auto; /* PENYESUAIAN LAYOUT */
-            padding-right: 0.5rem; /* PENYESUAIAN LAYOUT */
+            overflow-y: auto;
+            padding-right: 0.5rem;
         }
 
         .menu-item {
@@ -135,7 +135,7 @@
             align-items: center;
             transition: all 0.2s ease;
             cursor: default;
-            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
+            flex-shrink: 0;
         }
 
         .menu-item.clickable {
@@ -208,7 +208,7 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
             margin: 1.5rem 0;
-            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
+            flex-shrink: 0;
         }
 
         .input-section {
@@ -216,7 +216,7 @@
             padding: 1.5rem;
             border-radius: 12px;
             text-align: center;
-            flex-shrink: 0; /* PENYESUAIAN LAYOUT */
+            flex-shrink: 0;
         }
 
         .input-section label {
@@ -303,7 +303,7 @@
                         Menu Utama / Spesial
                     </h2>
                     <div id="main-menu-list" class="menu-list">
-                        </div>
+                    </div>
                 </div>
 
                 <div class="menu-section">
@@ -312,7 +312,7 @@
                         Menu Opsional
                     </h2>
                     <div id="optional-menu-list" class="menu-list">
-                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -414,7 +414,10 @@
                 } else {
                     selectedOptionalIds = selectedOptionalIds.filter(id => id !== menuId);
                 }
-                cardInput.focus();
+                // Langsung fokus kembali ke input card
+                setTimeout(() => {
+                    cardInput.focus();
+                }, 10);
             }
         });
 
@@ -425,7 +428,15 @@
                 html: details.employee_name ? `<b style="font-size: 1.25rem;">${details.employee_name}</b><br><span style="color: #4a5568;">${message}</span>` : message,
                 timer: 3000,
                 timerProgressBar: true,
-                showConfirmButton: false
+                showConfirmButton: false,
+                didOpen: () => {
+                    // Fokus kembali segera setelah alert terbuka
+                    setTimeout(() => cardInput.focus(), 100);
+                },
+                didClose: () => {
+                    // Fokus kembali setelah alert ditutup
+                    setTimeout(() => cardInput.focus(), 100);
+                }
             });
         };
 
@@ -458,6 +469,12 @@
                     })
                 });
                 const result = await response.json();
+                
+                // Reset interface dulu sebelum alert
+                resetInterface();
+                cardInput.disabled = false;
+                
+                // Tampilkan alert
                 showStatus(response.ok, result.message, result);
 
                 if (response.ok) {
@@ -465,12 +482,11 @@
                 }
 
             } catch (error) {
+                // Reset interface dulu sebelum alert
+                resetInterface();
+                cardInput.disabled = false;
+                
                 showStatus(false, 'Terjadi masalah koneksi.');
-            } finally {
-                setTimeout(() => {
-                    resetInterface();
-                    cardInput.disabled = false;
-                }, 3000);
             }
         });
         
