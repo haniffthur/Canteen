@@ -41,7 +41,6 @@
     <div class="sidebar-heading">
         Laporan & Log
     </div>
-
     {{-- Menu untuk Admin, HR, dan Security Officer --}}
     @if(in_array(auth()->user()->role, ['admin', 'hr', 'security_officer']))
         <li class="nav-item {{ request()->is('logs*') ? 'active' : '' }}">
@@ -63,11 +62,9 @@
     @endif
 
     <hr class="sidebar-divider">
-
     <div class="sidebar-heading">
         Pengaturan & Master Data
     </div>
-    
     <li class="nav-item {{ request()->is('users*','employees*','cards*','gates*','menus*') ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMasterData">
             <i class="fas fa-fw fa-database text-primary"></i>
@@ -94,9 +91,8 @@
             </div>
         </div>
     </li>
-
+    
     <hr class="sidebar-divider d-none d-md-block">
-
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0 bg-light" id="sidebarToggle"></button>
     </div>

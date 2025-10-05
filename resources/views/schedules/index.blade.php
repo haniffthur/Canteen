@@ -2,11 +2,11 @@
 
 @section('content')
     <h1 class="h3 mb-2 text-gray-800">Daftar Jadwal Makan</h1>
-    <p class="mb-4">Halaman ini menampilkan semua jadwal makan yang telah dibuat.</p>
+    <p class="mb-4">Halaman ini menampilkan semua jadwal makan yang telah dibuat. Anda dapat membuat, melihat detail, mengubah, dan menghapus jadwal dari sini.</p>
 
     <div class="card shadow mb-4">
        <div class="card-header py-3">
-        {{-- Tombol ini sekarang membuka modal --}}
+        {{-- Tombol untuk membuka modal 'Create' --}}
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createScheduleModal">
             <i class="fas fa-plus"></i> Buat Jadwal Baru
         </button>
@@ -41,8 +41,15 @@
                                 </td>
                                 <td>{{ $schedule->counter_menus_count }} Menu</td>
                                 <td>
-                                    <a href="{{ route('schedules.show', $schedule->id) }}" class="btn btn-info btn-sm"><i
-                                            class="fas fa-eye"></i> Detail</a>
+                                    <a href="{{ route('schedules.show', $schedule->id) }}" class="btn btn-info btn-sm" title="Detail"><i class="fas fa-eye"></i></a>
+                                    
+                                    <button type="button" class="btn btn-warning btn-sm edit-schedule-btn" 
+                                            data-url="{{ route('schedules.edit', $schedule->id) }}"
+                                            data-update-url="{{ route('schedules.update', $schedule->id) }}"
+                                            title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    
                                     <form action="{{ route('schedules.destroy', $schedule->id) }}" method="POST"
                                         class="d-inline"
                                         onsubmit="return confirm('Yakin ingin menghapus jadwal ini? Semua data penugasan menu di dalamnya juga akan terhapus.');">
@@ -65,11 +72,14 @@
             </div>
         </div>
     </div>
+    
     <div class="modal fade" id="createScheduleModal" tabindex="-1" role="dialog" aria-labelledby="createScheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form action="{{ route('schedules.store') }}" method="POST">
+            <form action="{{ route('schedules.store') }}" method="POST" id="scheduleForm">
                 @csrf
+                <div id="method-field"></div> {{-- Placeholder untuk @method('PUT') saat edit --}}
+                
                 <div class="modal-header">
                     <h5 class="modal-title" id="createScheduleModalLabel">Buat Jadwal Makan Baru</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -89,13 +99,13 @@
                     </div>
                     <hr>
 
-                    {{-- Penugasan Menu --}}
+                    {{-- Penugasan Menu Dinamis --}}
                     <h6>Penugasan Menu</h6>
                     <div id="assignments-container"></div>
                     <button type="button" id="add-row-btn" class="btn btn-success btn-sm mt-2"><i class="fas fa-plus"></i> Tambah Menu</button>
                     <hr>
 
-                    {{-- Pemilihan Gate --}}
+                    {{-- Pemilihan Gate/Counter --}}
                     <h6>Terapkan ke Counter</h6>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="apply_to_gates" id="applyToAll" value="all" checked>
@@ -127,55 +137,143 @@
     </div>
 </div>
 @endsection
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Logika untuk menampilkan/menyembunyikan pilihan gate
-    const gateSelectionContainer = document.getElementById('gate-selection-container');
-    document.querySelectorAll('input[name="apply_to_gates"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.value === 'selected') {
-                gateSelectionContainer.classList.remove('d-none');
-            } else {
-                gateSelectionContainer.classList.add('d-none');
-            }
-        });
-    });
-
-    // Logika untuk checkbox "Pilih Semua"
-    const checkAllGates = document.getElementById('checkAllGates');
-    const gateCheckboxes = document.querySelectorAll('.gate-checkbox');
-    checkAllGates.addEventListener('change', function() {
-        gateCheckboxes.forEach(checkbox => checkbox.checked = this.checked);
-    });
-
-    // Logika untuk tambah/hapus baris menu
-    let assignmentIndex = 0;
+    // --- Referensi elemen DOM ---
+    const modal = document.getElementById('createScheduleModal');
+    const modalTitle = document.getElementById('createScheduleModalLabel');
+    const scheduleForm = document.getElementById('scheduleForm');
+    const methodField = document.getElementById('method-field');
     const menuContainer = document.getElementById('assignments-container');
     const addMenuBtn = document.getElementById('add-row-btn');
-    const addRow = () => {
+    const gateSelectionContainer = document.getElementById('gate-selection-container');
+    const checkAllGates = document.getElementById('checkAllGates');
+    const gateCheckboxes = document.querySelectorAll('.gate-checkbox');
+
+    let assignmentIndex = 0;
+    const menusData = @json($menus->map(fn($m) => ['id' => $m->id, 'name' => "{$m->name} ({$m->category})"]));
+
+    // --- Logika form Create/Edit ---
+    const setupCreateForm = () => {
+        scheduleForm.action = "{{ route('schedules.store') }}";
+        methodField.innerHTML = '';
+        modalTitle.textContent = 'Buat Jadwal Makan Baru';
+        scheduleForm.reset();
+        menuContainer.innerHTML = '';
+        assignmentIndex = 0;
+        addRow();
+        gateSelectionContainer.classList.add('d-none');
+        document.getElementById('applyToAll').checked = true;
+    };
+
+    const setupEditForm = async (url, updateUrl) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            
+            // Set form action & method
+            scheduleForm.action = updateUrl;
+            methodField.innerHTML = `@method('PUT')`;
+            modalTitle.textContent = `Edit Jadwal`;
+
+            // Isi field utama
+            scheduleForm.querySelector('[name="meal_date"]').value = data.schedule.meal_date;
+            scheduleForm.querySelector('[name="meal_type"]').value = data.schedule.meal_type;
+            scheduleForm.querySelector('[name="day_type"]').value = data.schedule.day_type;
+            
+            // Isi menu assignments
+            menuContainer.innerHTML = '';
+            assignmentIndex = 0;
+            if (data.assignments.length > 0) {
+                data.assignments.forEach(assign => {
+                    addRow(assign);
+                });
+            } else {
+                addRow(); // Tambah satu baris kosong jika tidak ada assignment
+            }
+
+            // Isi gate selections
+            const totalActiveGates = {{ $gates->count() }};
+            const selectedGateCount = data.gate_ids.length;
+
+            if (selectedGateCount > 0 && selectedGateCount === totalActiveGates) {
+                scheduleForm.querySelector('#applyToAll').checked = true;
+                gateSelectionContainer.classList.add('d-none');
+            } else {
+                scheduleForm.querySelector('#applyToSelected').checked = true;
+                gateSelectionContainer.classList.remove('d-none');
+                gateCheckboxes.forEach(cb => {
+                    cb.checked = data.gate_ids.includes(parseInt(cb.value));
+                });
+            }
+
+            var myModal = new bootstrap.Modal(modal);
+            myModal.show();
+
+        } catch (error) {
+            console.error('Gagal mengambil data jadwal:', error);
+            alert('Gagal memuat data untuk diedit.');
+        }
+    };
+
+    // --- Fungsi Bantuan ---
+    const addRow = (data = null) => {
         const newRow = document.createElement('div');
         newRow.classList.add('row', 'align-items-end', 'assignment-row', 'mb-2');
+        
+        let menuOptions = '<option value="">-- Pilih --</option>';
+        menusData.forEach(menu => {
+            const isSelected = data && data.menu_id == menu.id ? 'selected' : '';
+            menuOptions += `<option value="${menu.id}" ${isSelected}>${menu.name}</option>`;
+        });
+
         newRow.innerHTML = `
-            <div class="col-md-5"><label>Menu</label><select name="assignments[${assignmentIndex}][menu_id]" class="form-control" required><option value="">-- Pilih --</option>@foreach($menus as $menu)<option value="{{ $menu->id }}">{{ $menu->name }} ({{$menu->category}})</option>@endforeach</select></div>
-            <div class="col-md-3"><label>Tipe Opsi</label><select name="assignments[${assignmentIndex}][meal_option_type]" class="form-control" required><option value="default">Default</option><option value="optional">Optional</option></select></div>
-            <div class="col-md-3"><label>Stok</label><input type="number" name="assignments[${assignmentIndex}][supply_qty]" class="form-control" placeholder="Kosong = ∞"></div>
+            <div class="col-md-5"><label>Menu</label><select name="assignments[${assignmentIndex}][menu_id]" class="form-control" required>${menuOptions}</select></div>
+            <div class="col-md-3"><label>Tipe Opsi</label><select name="assignments[${assignmentIndex}][meal_option_type]" class="form-control" required><option value="default" ${data && data.meal_option_type == 'default' ? 'selected' : ''}>Default</option><option value="optional" ${data && data.meal_option_type == 'optional' ? 'selected' : ''}>Optional</option></select></div>
+            <div class="col-md-3"><label>Stok</label><input type="number" name="assignments[${assignmentIndex}][supply_qty]" class="form-control" value="${data && data.supply_qty ? data.supply_qty : ''}" placeholder="Kosong = ∞"></div>
             <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm remove-row-btn">&times;</button></div>
         `;
         menuContainer.appendChild(newRow);
         assignmentIndex++;
     };
-    addRow();
-    addMenuBtn.addEventListener('click', addRow);
-    menuContainer.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-row-btn')) {
-            e.target.closest('.assignment-row').remove();
+    
+    // --- Event Listeners ---
+    document.querySelector('button[data-target="#createScheduleModal"]').addEventListener('click', setupCreateForm);
+    
+    document.body.addEventListener('click', function(e) {
+        if (e.target.closest('.edit-schedule-btn')) {
+            const btn = e.target.closest('.edit-schedule-btn');
+            setupEditForm(btn.dataset.url, btn.dataset.updateUrl);
         }
     });
 
-    // Jika ada error validasi, modal akan tetap terbuka saat halaman reload
+    document.querySelectorAll('input[name="apply_to_gates"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            gateSelectionContainer.classList.toggle('d-none', this.value === 'all');
+        });
+    });
+
+    checkAllGates.addEventListener('change', function() {
+        gateCheckboxes.forEach(checkbox => checkbox.checked = this.checked);
+    });
+    
+    addMenuBtn.addEventListener('click', () => addRow());
+
+    menuContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-row-btn')) {
+            // Jangan hapus baris terakhir
+            if (menuContainer.querySelectorAll('.assignment-row').length > 1) {
+                e.target.closest('.assignment-row').remove();
+            }
+        }
+    });
+
+    // Jika ada error validasi dari server, buka kembali modal
     @if($errors->any())
-        var myModal = new bootstrap.Modal(document.getElementById('createScheduleModal'));
+        var myModal = new bootstrap.Modal(modal);
         myModal.show();
     @endif
 });

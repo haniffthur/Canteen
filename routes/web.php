@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
     Route::get('/schedules/{schedule}', [ScheduleController::class, 'show'])->name('schedules.show'); // <-- ROUTE BARU
     Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy'); // <-- ROUTE BARU
+    Route::get('/schedules/{schedule}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
+Route::put('/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
 
     // Resource Controllers untuk Master Data
     Route::resource('menus', MenuController::class);

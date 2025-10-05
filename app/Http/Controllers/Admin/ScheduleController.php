@@ -141,4 +141,95 @@ class ScheduleController extends Controller
         $schedule->delete();
         return redirect()->route('schedules.index')->with('success', 'Jadwal berhasil dihapus.');
     }
+
+    public function edit(MealSchedule $schedule)
+    {
+        // Kita perlu memuat relasi counterMenus beserta menu dan gate-nya
+        // dan mengelompokkannya agar mudah diolah oleh JavaScript.
+        $schedule->load(['counterMenus' => function ($query) {
+            $query->select('meal_schedule_id', 'menu_id', 'gate_id', 'meal_option_type', 'supply_qty')
+                  ->distinct();
+        }]);
+        
+        // Ambil gate_ids yang terhubung dengan jadwal ini
+        $gateIds = $schedule->counterMenus->pluck('gate_id')->unique()->values();
+
+        // Ambil menu assignments yang unik
+        $assignments = $schedule->counterMenus->unique('menu_id')->map(function ($item) {
+            return [
+                'menu_id' => $item->menu_id,
+                'meal_option_type' => $item->meal_option_type,
+                'supply_qty' => $item->supply_qty,
+            ];
+        })->values();
+
+        return response()->json([
+            'schedule' => $schedule,
+            'gate_ids' => $gateIds,
+            'assignments' => $assignments
+        ]);
+    }
+
+    /**
+     * BARU: Memperbarui data jadwal di database.
+     */
+    public function update(Request $request, MealSchedule $schedule)
+    {
+        // Logika validasi sebagian besar sama dengan store()
+        // Namun, kita perlu menyesuaikan beberapa aturan, seperti cek duplikasi.
+        // Untuk saat ini, kita akan gunakan validasi yang mirip.
+        $validated = $request->validate([
+            'meal_date' => 'required|date',
+            'meal_type' => 'required|in:lunch,dinner',
+            'day_type' => 'required|in:normal,special',
+            'assignments' => 'required|array|min:1',
+            'assignments.*.menu_id' => 'required|exists:menus,id',
+            'assignments.*.meal_option_type' => 'required|in:default,optional',
+            'assignments.*.supply_qty' => 'nullable|integer|min:0',
+            'apply_to_gates' => 'required|in:all,selected',
+            'gate_ids' => 'required_if:apply_to_gates,selected|array|min:1',
+            'gate_ids.*' => 'exists:gates,id',
+        ]);
+
+        // Cek duplikasi, abaikan jadwal yang sedang diedit
+        $existingSchedule = MealSchedule::where('meal_date', $validated['meal_date'])
+            ->where('meal_type', $validated['meal_type'])
+            ->where('id', '!=', $schedule->id) // Abaikan diri sendiri
+            ->first();
+        if ($existingSchedule) {
+            return back()->withErrors(['meal_date' => 'Jadwal lain untuk tanggal dan sesi ini sudah ada.'])->withInput();
+        }
+        
+        DB::transaction(function () use ($validated, $schedule) {
+            // 1. Update data utama MealSchedule
+            $schedule->update([
+                'meal_date' => $validated['meal_date'],
+                'meal_type' => $validated['meal_type'],
+                'day_type' => $validated['day_type'],
+            ]);
+
+            // 2. Hapus semua penugasan menu lama yang terkait
+            $schedule->counterMenus()->delete();
+            
+            // 3. Buat ulang penugasan menu yang baru (logika sama seperti store)
+            $gateIdsToApply = ($validated['apply_to_gates'] == 'all')
+                ? Gate::where('status', 'active')->pluck('id')->toArray()
+                : $validated['gate_ids'];
+
+            foreach ($validated['assignments'] as $menuAssignment) {
+                foreach ($gateIdsToApply as $gateId) {
+                    CounterMenu::create([
+                        'meal_schedule_id' => $schedule->id,
+                        'gate_id' => $gateId,
+                        'menu_id' => $menuAssignment['menu_id'],
+                        'meal_option_type' => $menuAssignment['meal_option_type'],
+                        'supply_qty' => $menuAssignment['supply_qty'],
+                        'balance_qty' => $menuAssignment['supply_qty'],
+                    ]);
+                }
+            }
+        });
+
+        return redirect()->route('schedules.index')->with('success', 'Jadwal makan berhasil diperbarui!');
+    }
 }
