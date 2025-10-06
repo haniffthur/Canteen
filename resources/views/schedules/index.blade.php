@@ -230,12 +230,22 @@ document.addEventListener('DOMContentLoaded', function() {
             menuOptions += `<option value="${menu.id}" ${isSelected}>${menu.name}</option>`;
         });
 
+        // [DIUBAH] Tambahkan class 'meal-option-type-select' dan 'supply-qty-input'
         newRow.innerHTML = `
             <div class="col-md-5"><label>Menu</label><select name="assignments[${assignmentIndex}][menu_id]" class="form-control" required>${menuOptions}</select></div>
-            <div class="col-md-3"><label>Tipe Opsi</label><select name="assignments[${assignmentIndex}][meal_option_type]" class="form-control" required><option value="default" ${data && data.meal_option_type == 'default' ? 'selected' : ''}>Default</option><option value="optional" ${data && data.meal_option_type == 'optional' ? 'selected' : ''}>Optional</option></select></div>
-            <div class="col-md-3"><label>Stok</label><input type="number" name="assignments[${assignmentIndex}][supply_qty]" class="form-control" value="${data && data.supply_qty ? data.supply_qty : ''}" placeholder="Kosong = ∞"></div>
+            <div class="col-md-3"><label>Tipe Opsi</label><select name="assignments[${assignmentIndex}][meal_option_type]" class="form-control meal-option-type-select" required><option value="default" ${data && data.meal_option_type == 'default' ? 'selected' : ''}>Default</option><option value="optional" ${data && data.meal_option_type == 'optional' ? 'selected' : ''}>Optional</option></select></div>
+            <div class="col-md-3"><label>Stok</label><input type="number" name="assignments[${assignmentIndex}][supply_qty]" class="form-control supply-qty-input" value="${data && data.supply_qty ? data.supply_qty : ''}" placeholder="Kosong = ∞"></div>
             <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm remove-row-btn">&times;</button></div>
         `;
+        
+        // [BARU] Cek kondisi awal saat baris dibuat
+        const optionSelect = newRow.querySelector('.meal-option-type-select');
+        const stockInput = newRow.querySelector('.supply-qty-input');
+        if (optionSelect.value === 'default') {
+            stockInput.disabled = true;
+            stockInput.value = ''; // Pastikan kosong jika default
+        }
+
         menuContainer.appendChild(newRow);
         assignmentIndex++;
     };
@@ -267,6 +277,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // Jangan hapus baris terakhir
             if (menuContainer.querySelectorAll('.assignment-row').length > 1) {
                 e.target.closest('.assignment-row').remove();
+            }
+        }
+    });
+    menuContainer.addEventListener('change', function(e) {
+        if (e.target.classList.contains('meal-option-type-select')) {
+            const row = e.target.closest('.assignment-row');
+            const stockInput = row.querySelector('.supply-qty-input');
+
+            if (e.target.value === 'default') {
+                stockInput.disabled = true;
+                stockInput.value = ''; // Otomatis kosongkan field stok
+            } else { // Jika 'optional'
+                stockInput.disabled = false;
             }
         }
     });

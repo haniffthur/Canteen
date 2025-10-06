@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Sistem Kantin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(135deg, #fefce8, #f0fdf4);
@@ -73,6 +75,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-card">
         <div class="text-center mb-4">
@@ -84,19 +87,23 @@
             @csrf
             <div class="mb-3">
                 <label for="email" class="form-label">Alamat Email</label>
-                <input type="email" name="email" id="email"
-                       class="form-control @error('email') is-invalid @enderror"
-                       value="{{ old('email') }}" required autofocus>
+                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
+                    value="{{ old('email') }}" required autofocus>
                 @error('email')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
 
             <div class="mb-4">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" id="password" class="form-control" required>
+                <div class="input-group">
+                    <input type="password" name="password" id="password" class="form-control" required>
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="fas fa-eye" id="eye-icon"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="d-grid">
@@ -104,5 +111,23 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('#togglePassword');
+            const passwordInput = document.querySelector('#password');
+            const eyeIcon = document.querySelector('#eye-icon');
+
+            togglePassword.addEventListener('click', function () {
+                // Toggle tipe input
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                // Toggle ikon mata
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
 </body>
+
 </html>

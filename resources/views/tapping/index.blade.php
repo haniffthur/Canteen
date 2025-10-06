@@ -53,7 +53,14 @@
         .header h1 i {
             color: #667eea;
         }
-        .clock {
+        
+        /* --- [BARU] Style untuk kontainer jam dan tanggal --- */
+        .datetime-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* Rata kanan */
+        }
+        .time-display {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -61,9 +68,18 @@
             font-weight: 600;
             color: #4a5568;
         }
-        .clock i {
+        .date-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #718096; /* Warna lebih soft */
+            margin-top: 0.25rem;
+        }
+        .time-display i, .date-display i {
             color: #667eea;
         }
+        
         .main-content {
             background: white;
             border-radius: 16px;
@@ -76,7 +92,7 @@
         }
         .menu-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* KEDUA KOLOM SEKARANG 50:50 */
+            grid-template-columns: 1fr 1fr;
             gap: 2rem;
             flex-grow: 1;
             overflow: hidden;
@@ -88,6 +104,7 @@
             border: 2px solid #e2e8f0;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         .menu-section h2 {
             font-size: 1.125rem;
@@ -132,7 +149,7 @@
         }
         .menu-item-name {
             font-weight: 500;
-            font-size: 0.95rem; /* Ukuran font standar untuk menu opsional */
+            font-size: 0.95rem;
         }
         .menu-item.main-menu {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -154,12 +171,6 @@
         .stock-badge.warning {
             background: #fef5e7;
             color: #d97706;
-        }
-        .loading, .empty-state {
-            text-align: center;
-            padding: 2rem;
-            color: #718096;
-            font-size: 0.95rem;
         }
         .divider {
             height: 2px;
@@ -196,12 +207,6 @@
             transition: all 0.3s ease;
             letter-spacing: 2px;
         }
-        .card-input:focus {
-            outline: none;
-            border-color: white;
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
-            transform: scale(1.02);
-        }
         .swal2-popup {
             font-family: 'Inter', sans-serif !important;
             border-radius: 16px !important;
@@ -233,21 +238,21 @@
             opacity: 1;
             width: auto;
         }
-        
-        /* --- STYLE UNTUK MEMPERBESAR HANYA MENU UTAMA --- */
-        /* Selector :first-child ini memastikan hanya kolom pertama (Menu Utama) yang terpengaruh */
         .menu-grid .menu-section:first-child .menu-item {
-            padding: 1.5rem 2rem; /* Diperbesar padding agar item terlihat lebih besar */
+            padding: 1.5rem 2rem;
         }
         .menu-grid .menu-section:first-child .menu-item-name {
-            font-size: 1.3rem; /* UKURAN FONT MENU UTAMA */
+            font-size: 1.3rem;
             font-weight: 600;
         }
         .menu-grid .menu-section:first-child .stock-badge {
-            font-size: 1rem; /* Ukuran badge stok untuk menu utama */
+            font-size: 1rem;
             padding: 0.4rem 1rem;
         }
-
+        .menu-grid .menu-section:nth-child(2) .menu-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -267,48 +272,34 @@
                 <i class="fas fa-utensils"></i>
                 Tapping Interface - {{ $gate->name }}
             </h1>
-            <div class="clock">
-                <i class="far fa-clock"></i>
-                <span id="clock">00:00:00</span>
+            <div class="datetime-container">
+                <div class="time-display">
+                    <i class="far fa-clock"></i>
+                    <span id="clock">00:00:00</span>
+                </div>
+                <div class="date-display">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="date">-- ---- ----</span>
+                </div>
             </div>
         </div>
 
         <div class="main-content">
             <div class="menu-grid">
                 <div class="menu-section">
-                    <h2>
-                        <i class="fas fa-star"></i>
-                        Menu Utama / Spesial
-                    </h2>
-                    <div id="main-menu-list" class="menu-list">
-                    </div>
+                    <h2><i class="fas fa-star"></i> Menu Utama / Spesial</h2>
+                    <div id="main-menu-list" class="menu-list"></div>
                 </div>
-
                 <div class="menu-section">
-                    <h2>
-                        <i class="fas fa-plus-circle"></i>
-                        Menu Opsional
-                    </h2>
-                    <div id="optional-menu-list" class="menu-list">
-                    </div>
+                    <h2><i class="fas fa-plus-circle"></i> Menu Opsional</h2>
+                    <div id="optional-menu-list" class="menu-list"></div>
                 </div>
             </div>
-
             <div class="divider"></div>
-
             <div class="input-section">
-                <label for="card-number-input">
-                    <i class="fas fa-id-card"></i> Tap Kartu Karyawan
-                </label>
+                <label for="card-number-input"><i class="fas fa-id-card"></i> Tap Kartu Karyawan</label>
                 <form id="tapping-form" onsubmit="return false;">
-                    <input 
-                        type="text" 
-                        id="card-number-input" 
-                        class="card-input" 
-                        placeholder="TAP KARTU DI SINI..." 
-                        autofocus
-                        autocomplete="off"
-                    >
+                    <input type="text" id="card-number-input" class="card-input" placeholder="TAP KARTU DI SINI..." autofocus autocomplete="off">
                 </form>
             </div>
         </div>
@@ -317,6 +308,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // ... (const lain tidak berubah) ...
         const mainMenuList = document.getElementById('main-menu-list');
         const optionalMenuList = document.getElementById('optional-menu-list');
         const tappingForm = document.getElementById('tapping-form');
@@ -325,7 +317,7 @@
         const menuApiUrl = `{{ route('api.tapping.menu', $gate->id) }}`;
         let selectedOptionalIds = [];
 
-        const fetchAndUpdateMenus = async () => {
+        const fetchAndUpdateMenus = async () => { /* ... (fungsi ini tidak berubah) ... */
             try {
                 const response = await fetch(menuApiUrl);
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -370,7 +362,6 @@
                 if (!optionalMenuFound) {
                     optionalMenuList.innerHTML = '<div class="empty-state"><i class="fas fa-info-circle"></i><p>Tidak ada menu opsional tersedia</p></div>';
                 }
-
             } catch (error) {
                 console.error("Gagal memuat menu:", error);
                 mainMenuList.innerHTML = '<div class="empty-state" style="color: #e53e3e;"><i class="fas fa-exclamation-triangle"></i><p>Gagal memuat menu</p></div>';
@@ -378,17 +369,29 @@
             }
         };
 
-        function updateClock() {
+        // [DIUBAH] Fungsi updateClock menjadi updateDateTime
+        function updateDateTime() {
             const now = new Date();
+            
+            // Update Waktu
             const timeString = now.toLocaleTimeString('id-ID', { 
                 hour: '2-digit', 
                 minute: '2-digit', 
                 second: '2-digit' 
             });
             document.getElementById('clock').textContent = timeString.replace(/\./g, ':');
+
+            // Update Tanggal
+            const dateString = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('date').textContent = dateString;
         }
 
-        optionalMenuList.addEventListener('click', function(e) {
+        optionalMenuList.addEventListener('click', function(e) { /* ... (fungsi ini tidak berubah) ... */
             const menuItem = e.target.closest('.menu-item.clickable');
             if (menuItem) {
                 menuItem.classList.toggle('selected');
@@ -404,7 +407,7 @@
             }
         });
 
-        const showStatus = (success, message, details = {}) => {
+        const showStatus = (success, message, details = {}) => { /* ... (fungsi ini tidak berubah) ... */
             Swal.fire({
                 icon: success ? 'success' : 'error',
                 title: success ? 'Berhasil' : 'Gagal',
@@ -412,29 +415,23 @@
                 timer: 3000,
                 timerProgressBar: true,
                 showConfirmButton: false,
-                didOpen: () => {
-                    setTimeout(() => cardInput.focus(), 100);
-                },
-                didClose: () => {
-                    setTimeout(() => cardInput.focus(), 100);
-                }
+                didOpen: () => { setTimeout(() => cardInput.focus(), 100); },
+                didClose: () => { setTimeout(() => cardInput.focus(), 100); }
             });
         };
 
-        const resetInterface = () => {
+        const resetInterface = () => { /* ... (fungsi ini tidak berubah) ... */
             cardInput.value = '';
             cardInput.focus();
             selectedOptionalIds = [];
             document.querySelectorAll('.menu-item.selected').forEach(item => item.classList.remove('selected'));
         };
 
-        tappingForm.addEventListener('submit', async function(e) {
+        tappingForm.addEventListener('submit', async function(e) { /* ... (fungsi ini tidak berubah) ... */
             e.preventDefault();
             const cardNumber = cardInput.value.trim();
             if (!cardNumber) return;
-            
             cardInput.disabled = true;
-
             try {
                 const response = await fetch("{{ route('api.tap.process') }}", {
                     method: 'POST',
@@ -450,16 +447,12 @@
                     })
                 });
                 const result = await response.json();
-                
                 resetInterface();
                 cardInput.disabled = false;
-                
                 showStatus(response.ok, result.message, result);
-
                 if (response.ok) {
                     fetchAndUpdateMenus();
                 }
-
             } catch (error) {
                 resetInterface();
                 cardInput.disabled = false;
@@ -467,7 +460,7 @@
             }
         });
 
-        const refreshCsrfToken = async () => {
+        const refreshCsrfToken = async () => { /* ... (fungsi ini tidak berubah) ... */
             try {
                 const response = await fetch("{{ route('refresh.csrf') }}");
                 const data = await response.json();
@@ -478,12 +471,12 @@
             }
         };
         
-        // Panggilan awal dan interval
+        // [DIUBAH] Panggilan awal dan interval
         fetchAndUpdateMenus();
-        setInterval(fetchAndUpdateMenus, 30000); // Refresh menu setiap 30 detik
-        setInterval(updateClock, 1000);
-        setInterval(refreshCsrfToken, 3600000); // Refresh CSRF token setiap 1 jam
-        updateClock();
+        setInterval(fetchAndUpdateMenus, 30000);
+        setInterval(updateDateTime, 1000); // Panggil fungsi baru
+        setInterval(refreshCsrfToken, 3600000);
+        updateDateTime(); // Panggil sekali di awal
     });
     </script>
 </body>
