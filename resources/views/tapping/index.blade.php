@@ -13,11 +13,9 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         html {
             height: 100%;
         }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -26,7 +24,6 @@
             color: #1a202c;
             overflow: hidden;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -34,7 +31,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .header {
             background: white;
             border-radius: 16px;
@@ -46,7 +42,6 @@
             align-items: center;
             flex-shrink: 0;
         }
-
         .header h1 {
             font-size: 1.5rem;
             font-weight: 700;
@@ -55,11 +50,9 @@
             align-items: center;
             gap: 0.75rem;
         }
-
         .header h1 i {
             color: #667eea;
         }
-
         .clock {
             display: flex;
             align-items: center;
@@ -68,11 +61,9 @@
             font-weight: 600;
             color: #4a5568;
         }
-
         .clock i {
             color: #667eea;
         }
-
         .main-content {
             background: white;
             border-radius: 16px;
@@ -83,15 +74,13 @@
             flex-direction: column;
             overflow: hidden;
         }
-
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr; /* KEDUA KOLOM SEKARANG 50:50 */
             gap: 2rem;
             flex-grow: 1;
             overflow: hidden;
         }
-        
         .menu-section {
             background: #f7fafc;
             border-radius: 12px;
@@ -100,7 +89,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .menu-section h2 {
             font-size: 1.125rem;
             font-weight: 600;
@@ -111,12 +99,10 @@
             gap: 0.5rem;
             flex-shrink: 0;
         }
-
         .menu-section h2 i {
             color: #667eea;
-            font-size: 2rem;
+            font-size: 1rem;
         }
-
         .menu-list {
             display: flex;
             flex-direction: column;
@@ -124,7 +110,6 @@
             overflow-y: auto;
             padding-right: 0.5rem;
         }
-
         .menu-item {
             background: white;
             padding: 1rem 1.25rem;
@@ -137,33 +122,27 @@
             cursor: default;
             flex-shrink: 0;
         }
-
         .menu-item.clickable {
             cursor: pointer;
         }
-
         .menu-item.clickable:hover {
             border-color: #667eea;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
         }
-
         .menu-item-name {
             font-weight: 500;
-            font-size: 1.95rem;
+            font-size: 0.95rem; /* Ukuran font standar untuk menu opsional */
         }
-
         .menu-item.main-menu {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
             border-color: #f5576c;
         }
-
         .menu-item.main-menu .stock-badge {
             background: rgba(255, 255, 255, 0.25);
             color: white;
         }
-
         .stock-badge {
             background: #fed7d7;
             color: #c53030;
@@ -172,32 +151,22 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-
         .stock-badge.warning {
             background: #fef5e7;
             color: #d97706;
         }
-
         .loading, .empty-state {
             text-align: center;
             padding: 2rem;
             color: #718096;
             font-size: 0.95rem;
         }
-
-        .loading i {
-            font-size: 2rem;
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
-
         .divider {
             height: 2px;
             background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
             margin: 1.5rem 0;
             flex-shrink: 0;
         }
-
         .input-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 1.5rem;
@@ -205,7 +174,6 @@
             text-align: center;
             flex-shrink: 0;
         }
-
         .input-section label {
             display: block;
             color: white;
@@ -215,7 +183,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
         .card-input {
             width: 100%;
             padding: 1rem;
@@ -229,32 +196,21 @@
             transition: all 0.3s ease;
             letter-spacing: 2px;
         }
-
         .card-input:focus {
             outline: none;
             border-color: white;
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
             transform: scale(1.02);
         }
-
-        .card-input::placeholder {
-            color: #a0aec0;
-            font-weight: 500;
-            letter-spacing: 1px;
-        }
-
         .swal2-popup {
             font-family: 'Inter', sans-serif !important;
             border-radius: 16px !important;
         }
-
-        /* --- STYLE BARU UNTUK CENTANG --- */
         .menu-details {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-
         .check-icon {
             color: white;
             font-size: 1.2rem;
@@ -262,7 +218,6 @@
             transition: opacity 0.2s ease-in-out;
             width: 0;
         }
-
         .menu-item.selected {
             background: #667eea;
             border-color: #667eea;
@@ -270,17 +225,28 @@
             transform: none;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
-        
         .menu-item.selected .stock-badge {
             background: rgba(255, 255, 255, 0.25);
             color: white;
         }
-
         .menu-item.selected .check-icon {
             opacity: 1;
             width: auto;
         }
-        /* --- AKHIR STYLE BARU --- */
+        
+        /* --- STYLE UNTUK MEMPERBESAR HANYA MENU UTAMA --- */
+        /* Selector :first-child ini memastikan hanya kolom pertama (Menu Utama) yang terpengaruh */
+        .menu-grid .menu-section:first-child .menu-item {
+            padding: 1.5rem 2rem; /* Diperbesar padding agar item terlihat lebih besar */
+        }
+        .menu-grid .menu-section:first-child .menu-item-name {
+            font-size: 1.3rem; /* UKURAN FONT MENU UTAMA */
+            font-weight: 600;
+        }
+        .menu-grid .menu-section:first-child .stock-badge {
+            font-size: 1rem; /* Ukuran badge stok untuk menu utama */
+            padding: 0.4rem 1rem;
+        }
 
         @media (max-width: 768px) {
             .header {
