@@ -114,7 +114,7 @@
 
         .menu-section h2 i {
             color: #667eea;
-            font-size: 1rem;
+            font-size: 2rem;
         }
 
         .menu-list {
@@ -150,7 +150,7 @@
 
         .menu-item-name {
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 1.95rem;
         }
 
         .menu-item.main-menu {
