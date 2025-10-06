@@ -50,7 +50,7 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     
-                                    <form action="{{ route('schedules.destroy', $schedule->id) }}" method="POST"
+                                    <!-- <form action="{{ route('schedules.destroy', $schedule->id) }}" method="POST"
                                         class="d-inline"
                                         onsubmit="return confirm('Yakin ingin menghapus jadwal ini? Semua data penugasan menu di dalamnya juga akan terhapus.');">
                                         @csrf
@@ -58,7 +58,7 @@
                                         <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </form>
+                                    </form> -->
                                 </td>
                             </tr>
                         @empty
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     checkAllGates.addEventListener('change', function() {
         gateCheckboxes.forEach(checkbox => checkbox.checked = this.checked);
     });
-    
+
     addMenuBtn.addEventListener('click', () => addRow());
 
     menuContainer.addEventListener('click', function(e) {

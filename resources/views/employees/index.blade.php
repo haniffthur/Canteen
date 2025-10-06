@@ -17,10 +17,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                         <th>ID Karyawan</th>
                         <th>Nama Karyawan</th>
-                        <th>ID Karyawan</th>
-                        <th>Email</th>
-                        <th>Departemen</th>
+                         <th>Departemen</th>
+                        <th>Nomor Kartu</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -29,21 +29,22 @@
                     @forelse ($employees as $employee)
                         <tr>
                             <td>{{ $loop->iteration + $employees->firstItem() - 1 }}</td>
-                            <td>{{ $employee->name }}</td>
                             <td>{{ $employee->employee_id }}</td>
-                            <td>{{ $employee->email ?? '-' }}</td>
+                            <td>{{ $employee->name }}</td>
                             <td>{{ $employee->department ?? '-' }}</td>
+                            <td>{{ $employee->card->card_number ?? '-' }}</td> 
                             <td>
                                 <span class="badge {{ $employee->status == 'active' ? 'bg-success' : 'bg-danger' }} text-white">
                                     {{ ucfirst($employee->status) }}
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                  <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-info btn-sm" title="Detail"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus"><i class="fas fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

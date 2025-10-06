@@ -14,6 +14,7 @@ use App\Http\Controllers\TappingController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\MoveMenuController;
 use App\Http\Controllers\WaiterViewController;
+use App\Http\Controllers\Admin\DepartmentController;
 
 
 
@@ -38,7 +39,7 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 });
-    // Halaman Tapping (Publik)
+// Halaman Tapping (Publik)
 Route::get('/tapping/{gate}', [TappingController::class, 'index'])->name('tapping.index');
 
 // API Untuk Proses Tapping
@@ -47,9 +48,9 @@ Route::post('/api/tap', [TappingController::class, 'tap'])->name('api.tap.proces
 // ROUTE BARU: API untuk mengambil menu aktif secara dinamis
 Route::get('/api/tapping/{gate}/menu', [TappingController::class, 'getActiveMenu'])->name('api.tapping.menu');
 
-Route::get('/waiter-view/{gate}', [WaiterViewController::class, 'index'])->name('waiter-view.index');
+Route::get('/waiter/{gate}', [WaiterViewController::class, 'index'])->name('waiter-view.index');
 Route::get('/api/waiter-view/{gate}/logs', [WaiterViewController::class, 'getLatestLogs'])->name('api.waiter-view.logs');
-    
+
 
 // --- Grup Route untuk Pengguna yang Sudah Login ---
 Route::middleware(['auth'])->group(function () {
@@ -76,26 +77,29 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/schedules/{schedule}', [ScheduleController::class, 'show'])->name('schedules.show'); // <-- ROUTE BARU
     Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy'); // <-- ROUTE BARU
     Route::get('/schedules/{schedule}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
-Route::put('/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
+    Route::put('/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
 
     // Resource Controllers untuk Master Data
     Route::resource('menus', MenuController::class);
     Route::resource('employees', EmployeeController::class);
-
- Route::resource('users', UserController::class);
+     Route::resource('departments', DepartmentController::class);
+    Route::resource('users', UserController::class);
     Route::resource('gates', GateController::class);
     Route::post('gates/bulk-update-time', [GateController::class, 'bulkUpdateTime'])->name('gates.bulkUpdateTime');
 
     Route::resource('cards', CardController::class);
     // Route::resource('users', UserController::class);
 
-     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{employee}', [LogController::class, 'show'])->name('logs.show'); // <-- Route baru untuk detail
     Route::get('/reports/consumption', [ReportController::class, 'consumption'])->name('reports.consumption');
-     Route::get('/reports/consumption/{menu}', [ReportController::class, 'consumptionDetail'])->name('reports.consumption.detail');
+    Route::get('/reports/consumption/{menu}', [ReportController::class, 'consumptionDetail'])->name('reports.consumption.detail');
 
-Route::get('/move-menu', [MoveMenuController::class, 'create'])->name('move-menu.create');
+    Route::get('/move-menu', [MoveMenuController::class, 'create'])->name('move-menu.create');
     Route::post('/move-menu', [MoveMenuController::class, 'store'])->name('move-menu.store');
+    Route::get('/refresh-csrf', function() {
+    return response()->json(['csrf_token' => csrf_token()]);
+})->name('refresh.csrf');
     // });
 
 

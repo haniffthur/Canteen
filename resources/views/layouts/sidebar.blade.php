@@ -15,6 +15,40 @@
     </li>
 
     <hr class="sidebar-divider">
+    <div class="sidebar-heading">
+    Pengaturan & Master Data
+</div>
+
+{{-- Penambahan 'departments*' agar dropdown tetap 'show' --}}
+<li class="nav-item {{ request()->is('users*','employees*','cards*','gates*','menus*','departments*') ? 'active' : '' }}">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMasterData">
+        <i class="fas fa-fw fa-database text-primary"></i>
+        <span class="ml-2">Kelola Master Data</span>
+    </a>
+    <div id="collapseMasterData" class="collapse {{ request()->is('users*','employees*','cards*','gates*','menus*','departments*') ? 'show' : '' }}" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            {{-- Hanya Admin --}}
+            @if(auth()->user()->role == 'admin')
+                <a class="collapse-item {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">Manajemen User</a>
+                
+                <a class="collapse-item {{ request()->is('departments*') ? 'active' : '' }}" href="{{ route('departments.index') }}">Kelola Departemen</a>
+
+                <a class="collapse-item {{ request()->is('menus*') ? 'active' : '' }}" href="{{ route('menus.index') }}">Kelola Menu</a>
+                <a class="collapse-item {{ request()->is('gates*') ? 'active' : '' }}" href="{{ route('gates.index') }}">Kelola Counter</a>
+            @endif
+            
+            {{-- Admin & HR --}}
+            @if(in_array(auth()->user()->role, ['admin', 'hr']))
+                <a class="collapse-item {{ request()->is('employees*') ? 'active' : '' }}" href="{{ route('employees.index') }}">Kelola Karyawan</a>
+            @endif
+
+            {{-- Admin & Security Officer --}}
+            @if(in_array(auth()->user()->role, ['admin', 'security_officer']))
+                <a class="collapse-item {{ request()->is('cards*') ? 'active' : '' }}" href="{{ route('cards.index') }}">Manajemen Kartu</a>
+            @endif
+        </div>
+    </div>
+</li>
 
     <div class="sidebar-heading">
         Operasional
@@ -62,35 +96,7 @@
     @endif
 
     <hr class="sidebar-divider">
-    <div class="sidebar-heading">
-        Pengaturan & Master Data
-    </div>
-    <li class="nav-item {{ request()->is('users*','employees*','cards*','gates*','menus*') ? 'active' : '' }}">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMasterData">
-            <i class="fas fa-fw fa-database text-primary"></i>
-            <span class="ml-2">Kelola Master Data</span>
-        </a>
-        <div id="collapseMasterData" class="collapse {{ request()->is('users*','employees*','cards*','gates*','menus*') ? 'show' : '' }}" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                {{-- Hanya Admin --}}
-                @if(auth()->user()->role == 'admin')
-                    <a class="collapse-item {{ request()->is('users*') ? 'active' : '' }}" href="{{ route('users.index') }}">Manajemen User</a>
-                    <a class="collapse-item {{ request()->is('menus*') ? 'active' : '' }}" href="{{ route('menus.index') }}">Kelola Menu</a>
-                    <a class="collapse-item {{ request()->is('gates*') ? 'active' : '' }}" href="{{ route('gates.index') }}">Kelola Counter</a>
-                @endif
-                
-                {{-- Admin & HR --}}
-                @if(in_array(auth()->user()->role, ['admin', 'hr']))
-                    <a class="collapse-item {{ request()->is('employees*') ? 'active' : '' }}" href="{{ route('employees.index') }}">Kelola Karyawan</a>
-                @endif
-
-                {{-- Admin & Security Officer --}}
-                @if(in_array(auth()->user()->role, ['admin', 'security_officer']))
-                    <a class="collapse-item {{ request()->is('cards*') ? 'active' : '' }}" href="{{ route('cards.index') }}">Manajemen Kartu</a>
-                @endif
-            </div>
-        </div>
-    </li>
+    
     
     <hr class="sidebar-divider d-none d-md-block">
     <div class="text-center d-none d-md-inline">

@@ -1,122 +1,189 @@
-# Sistem Kantin Karyawan (Employee Canteen System)
 
-Sistem Kantin Karyawan adalah aplikasi web berbasis Laravel 10 yang dirancang untuk mengelola dan memonitor proses pengambilan jatah makan karyawan di sebuah perusahaan. Sistem ini menggantikan proses manual dengan sistem tapping kartu RFID/NFC yang terintegrasi, menyediakan data real-time, dan mempermudah proses pelaporan.
+# Proyek Canteen
 
-![Tampilan Antarmuka Tapping](https://i.imgur.com/U6V5MxO.jpeg) 
-*Ganti dengan screenshot antarmuka tappingmu*
+Proyek "Canteen" adalah aplikasi web berbasis Laravel 10 yang dirancang untuk mengelola dan memantau proses pengambilan jatah makan karyawan di sebuah perusahaan. Sistem ini menggantikan proses manual dengan sistem tap kartu RFID/NFC yang terintegrasi, menyediakan data real-time dan menyederhanakan proses pelaporan.
 
----
+## Teknologi yang Digunakan
 
-## ✨ Fitur Utama
+  - **Backend:** PHP 8.1+, Laravel 10
+  - **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap 5 (via SB Admin 2)
+  - **Database:** MySQL / MariaDB
+  - **Fitur Frontend Lanjutan:** AJAX, Chart.js, SweetAlert2, Tom Select
 
-Sistem ini dilengkapi dengan berbagai fitur untuk memenuhi kebutuhan operasional kantin modern:
+## Prasyarat (Prerequisites)
 
-### Panel Admin & HR
-- **Sistem Login Berbasis Role:** Memisahkan hak akses antara Admin dan HR.
-- **Dashboard Interaktif:** Menampilkan statistik penting secara real-time seperti jumlah makanan yang disajikan, jumlah karyawan aktif, jadwal aktif, dan peringatan stok kritis. Data diperbarui secara otomatis menggunakan AJAX.
-- **Manajemen Master Data (CRUD):**
-    - **Kelola Menu:** Menambah, mengubah, dan menghapus data menu dengan kategori (Utama, Spesial, Opsional).
-    - **Kelola Karyawan:** Mengelola data karyawan, termasuk menautkan kartu akses saat pendaftaran.
-    - **Kelola Kartu:** Mengelola aset kartu RFID/NFC, menugaskannya ke karyawan, dan mengubah statusnya (hilang, rusak).
-    - **Kelola Counter:** Mendaftarkan counter/gate fisik dan mengatur jam operasionalnya.
-- **Manajemen Jadwal Makan:**
-    - Membuat jadwal harian (Makan Siang/Malam) dengan tipe hari (Normal/Spesial).
-    - Menugaskan beberapa menu ke satu atau banyak counter sekaligus dalam satu form.
-    - Aturan bisnis yang kompleks untuk validasi menu di hari spesial.
-- **Fitur Operasional Real-time:**
-    - **Pindah Menu:** Memindahkan stok menu dari satu counter ke counter lain saat operasional sedang berlangsung.
-- **Pelaporan:**
-    - **Log Transaksi:** Melihat riwayat tapping yang dikelompokkan per karyawan, dengan halaman detail untuk setiap karyawan.
-    - **Laporan Konsumsi:** Melihat rekapitulasi total konsumsi per menu dengan filter rentang tanggal. Laporan ini juga interaktif dengan AJAX dan memiliki halaman detail untuk melihat siapa saja yang mengonsumsi menu tertentu.
+Pastikan perangkat lunak berikut telah terinstal di lingkungan pengembangan Anda:
 
-### Antarmuka Tapping Publik
-- **Halaman Tapping Tanpa Login:** Didesain untuk diakses langsung dari perangkat di setiap counter.
-- **Tampilan Menu Dinamis:** Secara otomatis menampilkan menu yang aktif sesuai jadwal dan counter. Halaman ini juga melakukan auto-update setiap 30 detik.
-- **Proses Tapping Efisien:** Staff dapat memilih menu opsional terlebih dahulu, lalu karyawan melakukan tap kartu untuk mencatat semua menu (utama + opsional) dalam satu kali transaksi.
-- **Validasi Real-time:** Sistem akan langsung memberikan notifikasi (sukses atau gagal) jika kartu tidak valid, karyawan sudah makan, stok habis, atau counter sedang tidak aktif.
+  - PHP 8.1 atau lebih baru
+  - Composer
+  - Node.js & NPM
+  - Server database (MySQL atau MariaDB)
 
----
+## Panduan Instalasi
 
-## 🚀 Teknologi yang Digunakan
-
-- **Backend:** PHP 8.1+, Laravel 10
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap 5 (via SB Admin 2)
-- **Database:** MySQL / MariaDB
-- **Fitur Frontend Lanjutan:**
-    - **AJAX (Fetch API):** Digunakan di Dashboard, Laporan, dan Antarmuka Tapping untuk pengalaman pengguna yang dinamis tanpa refresh.
-    - **Chart.js:** Untuk menampilkan grafik statistik di dashboard.
-    - **SweetAlert2:** Untuk notifikasi yang modern dan interaktif.
-    - **Tom Select:** Untuk input multi-select yang canggih di form jadwal.
-
----
-
-## ⚙️ Panduan Instalasi
-
-Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal:
+Berikut adalah langkah-langkah untuk menginstal dan menjalankan proyek "Canteen":
 
 1.  **Clone Repository**
+
     ```bash
-    git clone [https://github.com/your-username/canteen-system.git](https://github.com/your-username/canteen-system.git)
-    cd canteen-system
+    git clone https://github.com/haniffthur/Canteen.git
+    cd Canteen
     ```
 
-2.  **Install Dependensi**
+2.  **Instalasi Dependensi**
+    Jalankan perintah berikut untuk menginstal dependensi PHP dan JavaScript.
+
     ```bash
     composer install
     npm install
     ```
 
 3.  **Konfigurasi Lingkungan**
-    - Salin file `.env.example` menjadi `.env`.
-      ```bash
-      cp .env.example .env
-      ```
-    - Buat *application key* baru.
-      ```bash
-      php artisan key:generate
-      ```
-    - Atur koneksi database di dalam file `.env`.
-      ```
-      DB_CONNECTION=mysql
-      DB_HOST=127.0.0.1
-      DB_PORT=3306
-      DB_DATABASE=canteen_db
-      DB_USERNAME=root
-      DB_PASSWORD=
-      ```
+    Salin file `.env.example` menjadi `.env`.
 
-4.  **Migrasi & Seeding Database**
-    Jalankan migrasi untuk membuat semua tabel, lalu jalankan seeder untuk mengisi data awal (user admin, counter, dan menu).
+    ```bash
+    cp .env.example .env
+    ```
+
+    Kemudian, buat kunci aplikasi baru.
+
+    ```bash
+    php artisan key:generate
+    ```
+
+4.  **Konfigurasi Database**
+    Buka file `.env` dan atur koneksi database Anda.
+
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=nama_database_anda
+    DB_USERNAME=username_anda
+    DB_PASSWORD=password_anda
+    ```
+
+5.  **Migrasi dan Seeding Database**
+    Jalankan migrasi untuk membuat tabel database dan seeder untuk mengisi data awal.
+
     ```bash
     php artisan migrate --seed
     ```
 
-5.  **Compile Aset Frontend**
-    ```bash
-    npm run dev
-    ```
+6.  **Menjalankan Aplikasi**
+    Jalankan server pengembangan Laravel.
 
-6.  **Jalankan Server Development**
     ```bash
     php artisan serve
     ```
-    Aplikasi sekarang bisa diakses di `http://127.0.0.1:8000`.
+
+    Aplikasi akan berjalan di `http://127.0.0.1:8000`.
+
+### **Fitur-Fitur Secara Lengkap dan Rinci**
+
+Aplikasi "Canteen" ini dirancang untuk menjadi solusi komprehensif dalam manajemen kantin perusahaan. Berikut adalah detail dari setiap fiturnya:
+
+#### **1. Sistem Otentikasi dan Otorisasi Berbasis Peran (Role-Based)**
+Sistem ini memastikan bahwa setiap pengguna hanya dapat mengakses fitur yang sesuai dengan hak aksesnya.
+
+* **Admin:**
+    * Memiliki hak akses penuh ke seluruh sistem.
+    * Dapat mengelola semua data master (menu, karyawan, kartu, counter).
+    * Dapat melihat seluruh laporan dan statistik di dashboard.
+    * Mengelola akun pengguna lain (misalnya, membuat akun untuk HR).
+* **HR (Human Resources):**
+    * Memiliki hak akses yang lebih terbatas dibandingkan Admin.
+    * Fokus pada pengelolaan data karyawan dan kartu.
+    * Dapat melihat laporan yang relevan dengan data karyawan dan pengambilan makan.
+
+#### **2. Dashboard Interaktif dan Real-time**
+Dashboard adalah halaman utama yang memberikan gambaran umum tentang aktivitas kantin secara langsung.
+
+* **Statistik Real-time:** Menampilkan data yang terus diperbarui, seperti:
+    * Jumlah karyawan yang sudah mengambil makan hari ini.
+    * Sisa porsi menu yang tersedia di setiap counter.
+    * Grafik tren pengambilan makan (harian, mingguan, bulanan).
+* **Visualisasi Data:** Menggunakan grafik (seperti diagram batang atau lingkaran dari Chart.js) untuk mempermudah pemahaman data.
+* **Notifikasi Penting:** Dapat menampilkan informasi penting seperti stok menu yang akan habis.
+
+#### **3. Manajemen Data Master (CRUD - Create, Read, Update, Delete)**
+Ini adalah fitur inti untuk mengelola semua data yang dibutuhkan oleh sistem.
+
+* **Manajemen Menu:**
+    * Menambah, mengubah, dan menghapus menu makanan/minuman.
+    * Mengatur harga dan kuantitas (stok) untuk setiap menu.
+    * Menetapkan menu untuk hari atau tanggal tertentu.
+* **Manajemen Karyawan:**
+    * Mendaftarkan karyawan baru dan menonaktifkan karyawan yang sudah tidak bekerja.
+    * Menyimpan data detail karyawan (nama, NIP, departemen, dll.).
+    * Menghubungkan data karyawan dengan kartu RFID/NFC.
+* **Manajemen Kartu:**
+    * Mendaftarkan kartu RFID/NFC baru.
+    * Mengaitkan (pairing) kartu dengan seorang karyawan.
+    * Menonaktifkan kartu yang hilang atau rusak.
+* **Manajemen Counter:**
+    * Mendefinisikan lokasi counter pengambilan makan (misal: "Counter A", "Counter B").
+    * Mengalokasikan menu dan stok ke masing-masing counter.
+
+#### **4. Aturan Bisnis yang Kompleks (Complex Business Rules)**
+Fitur ini memungkinkan sistem untuk menangani skenario operasional yang spesifik.
+
+* **Validasi Menu Harian/Khusus:** Sistem dapat diatur agar menu tertentu hanya valid pada hari-hari tertentu (misalnya, "Menu Spesial Jumat" hanya bisa diambil pada hari Jumat).
+* **Pembatasan Pengambilan:** Mengatur agar setiap karyawan hanya bisa mengambil jatah makan satu kali per hari.
+
+#### **5. Fitur Operasional Real-time**
+Fitur ini dirancang untuk menangani dinamika operasional kantin sehari-hari.
+
+* **Pemindahan Stok Antar Counter:** Jika satu counter kehabisan stok menu tertentu sementara counter lain masih memiliki stok, admin dapat memindahkan stok tersebut melalui sistem. Perubahan ini akan langsung terlihat di antarmuka tapping.
+
+#### **6. Endpoint API Publik**
+API (Application Programming Interface) berfungsi sebagai jembatan antara perangkat tapping (misalnya, komputer dengan RFID reader di counter) dengan server utama.
+
+* **`GET /api/menu/{counter_id}`:** Endpoint ini digunakan untuk mengambil daftar menu yang aktif dan tersedia di counter tertentu. Perangkat tapping akan memanggil API ini untuk menampilkan menu kepada petugas counter.
+* **`POST /api/tap`:** Endpoint ini digunakan untuk memproses transaksi. Ketika seorang karyawan melakukan tap kartu, perangkat akan mengirimkan ID kartu ke API ini. Server kemudian akan memvalidasi kartu, memeriksa hak makan karyawan, mencatat transaksi, dan mengurangi stok menu.
 
 ---
 
-## 👨‍💻 Cara Penggunaan
+### **Alur Kerja (Workflow) Secara Rinci dan Jelas**
 
-Setelah instalasi selesai, Anda bisa login ke panel admin menggunakan kredensial default yang dibuat oleh `UserSeeder`.
+Berikut adalah alur kerja sistem "Canteen" dari berbagai sudut pandang:
 
-- **URL Login:** `http://127.0.0.1:8000/login`
-- **Email:** `admin@canteen.com`
-- **Password:** `password`
+#### **A. Alur Kerja Admin/HR (Persiapan dan Manajemen)**
 
-### Endpoint API
-Sistem ini memiliki beberapa endpoint API publik yang digunakan oleh antarmuka tapping:
-- `GET /api/tapping/{gate}/menu`: Mengambil daftar menu aktif untuk sebuah counter.
-- `POST /api/tap`: Memproses transaksi tapping kartu.
+1.  **Login:** Admin atau HR masuk ke dalam sistem menggunakan email dan password mereka.
+2.  **Manajemen Karyawan:**
+    * HR mendaftarkan karyawan baru ke dalam sistem.
+    * Setiap karyawan yang terdaftar akan dihubungkan dengan sebuah kartu RFID/NFC yang unik.
+3.  **Manajemen Menu:**
+    * Admin menyiapkan daftar menu yang akan disajikan untuk periode tertentu (misalnya, seminggu ke depan).
+    * Admin memasukkan jumlah porsi (stok awal) untuk setiap menu.
+4.  **Manajemen Counter:**
+    * Admin mengalokasikan menu-menu yang sudah disiapkan ke counter-counter yang tersedia. Misalnya, "Nasi Goreng" dialokasikan ke "Counter A" sebanyak 100 porsi.
 
----
+#### **B. Alur Kerja Karyawan (Pengambilan Makan)**
 
-Terima kasih telah menggunakan sistem ini!
+1.  **Datang ke Counter:** Karyawan datang ke salah satu counter kantin pada jam makan.
+2.  **Memilih Menu:** Karyawan memilih menu yang diinginkan (jika ada beberapa pilihan di counter tersebut).
+3.  **Tap Kartu:** Karyawan melakukan tap kartu RFID/NFC miliknya pada alat pembaca (RFID reader) yang tersedia di counter.
+4.  **Validasi Sistem:**
+    * Alat pembaca mengirimkan ID kartu ke server melalui API.
+    * Server menerima ID kartu dan melakukan serangkaian validasi:
+        * Apakah kartu ini terdaftar dan aktif?
+        * Apakah kartu ini sudah terhubung dengan seorang karyawan?
+        * Apakah karyawan ini sudah mengambil jatah makan hari ini?
+        * Apakah menu yang dipilih masih tersedia (stok > 0)?
+5.  **Hasil Transaksi:**
+    * **Jika Berhasil:** Sistem akan memberikan notifikasi sukses (misalnya, lampu hijau atau pesan di layar). Transaksi dicatat, dan stok menu otomatis berkurang satu.
+    * **Jika Gagal:** Sistem akan memberikan notifikasi gagal beserta alasannya (misalnya, "Jatah makan sudah diambil" atau "Kartu tidak terdaftar").
+
+#### **C. Alur Kerja Sistem (Monitoring dan Pelaporan)**
+
+1.  **Pencatatan Transaksi:** Setiap kali terjadi tap yang berhasil, sistem akan menyimpan data transaksi yang mencakup: ID karyawan, nama, menu yang diambil, counter, serta tanggal dan waktu.
+2.  **Pembaruan Dashboard:** Data di dashboard Admin/HR akan diperbarui secara real-time. Mereka bisa langsung melihat berapa banyak karyawan yang sudah makan dan sisa porsi setiap menu.
+3.  **Pembuatan Laporan:**
+    * Di akhir hari atau periode tertentu, Admin/HR dapat menghasilkan laporan.
+    * Laporan bisa berupa:
+        * Laporan harian pengambilan makan.
+        * Laporan rekapitulasi per karyawan atau per departemen.
+        * Laporan popularitas menu (menu mana yang paling sering diambil).
+    * Laporan ini dapat digunakan untuk analisis, perencanaan menu selanjutnya, atau keperluan audit.

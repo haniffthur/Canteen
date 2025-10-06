@@ -12,7 +12,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::latest()->paginate(10);
+        $employees = Employee::with('card')->latest()->paginate(10);
         return view('employees.index', compact('employees'));
     }
 
@@ -21,7 +21,7 @@ class EmployeeController extends Controller
         return view('employees.create');
     }
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
         // Pisahkan validasi agar bisa menangani card_number secara kondisional
         $validatedEmployee = $request->validate([
@@ -64,8 +64,8 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         // Gunakan load() untuk memuat relasi kartu, ini lebih efisien
-        $employee->load('card'); 
-        
+        $employee->load('card');
+
         return view('employees.edit', compact('employee'));
     }
 
@@ -90,4 +90,10 @@ class EmployeeController extends Controller
         $employee->delete();
         return redirect()->route('employees.index')->with('success', 'Data karyawan berhasil dihapus.');
     }
+
+    public function show(Employee $employee)
+    {
+    $employee->load('card');
+    return view('employees.show', compact('employee'));
+    }    
 }

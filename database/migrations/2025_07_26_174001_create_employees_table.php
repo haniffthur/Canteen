@@ -13,7 +13,13 @@ return new class extends Migration
             $table->string('employee_id')->unique();
             $table->string('name');
             $table->string('email')->unique()->nullable();
-            $table->string('department')->nullable();
+            
+            // DIUBAH: Menggunakan foreign key ke tabel departments
+            $table->foreignId('department_id')
+                  ->nullable()
+                  ->constrained('departments')
+                  ->onDelete('set null'); // Jika departemen dihapus, kolom ini jadi null
+
             $table->enum('status', ['active', 'resigned'])->default('active');
             $table->timestamps();
         });

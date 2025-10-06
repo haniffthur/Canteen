@@ -148,19 +148,6 @@
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
         }
 
-        .menu-item.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .menu-item.selected .stock-badge {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-        }
-
         .menu-item-name {
             font-weight: 500;
             font-size: 0.95rem;
@@ -256,6 +243,45 @@
             letter-spacing: 1px;
         }
 
+        .swal2-popup {
+            font-family: 'Inter', sans-serif !important;
+            border-radius: 16px !important;
+        }
+
+        /* --- STYLE BARU UNTUK CENTANG --- */
+        .menu-details {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .check-icon {
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            width: 0;
+        }
+
+        .menu-item.selected {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .menu-item.selected .stock-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .menu-item.selected .check-icon {
+            opacity: 1;
+            width: auto;
+        }
+        /* --- AKHIR STYLE BARU --- */
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -265,20 +291,6 @@
             .menu-grid {
                 grid-template-columns: 1fr;
             }
-        }
-
-        .swal2-popup {
-            font-family: 'Inter', sans-serif !important;
-            border-radius: 16px !important;
-        }
-
-        .pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
         }
     </style>
 </head>
@@ -374,7 +386,13 @@
                         const div = document.createElement('div');
                         div.className = 'menu-item clickable';
                         div.dataset.id = item.id;
-                        div.innerHTML = `<span class="menu-item-name">${item.menu.name}</span> ${stockBadge}`;
+                        div.innerHTML = `
+                            <div class="menu-details">
+                                <i class="fas fa-check-circle check-icon"></i>
+                                <span class="menu-item-name">${item.menu.name}</span>
+                            </div>
+                            ${stockBadge}
+                        `;
                         optionalMenuList.appendChild(div);
                         optionalMenuFound = true;
                     }
@@ -414,7 +432,6 @@
                 } else {
                     selectedOptionalIds = selectedOptionalIds.filter(id => id !== menuId);
                 }
-                // Langsung fokus kembali ke input card
                 setTimeout(() => {
                     cardInput.focus();
                 }, 10);
@@ -430,11 +447,9 @@
                 timerProgressBar: true,
                 showConfirmButton: false,
                 didOpen: () => {
-                    // Fokus kembali segera setelah alert terbuka
                     setTimeout(() => cardInput.focus(), 100);
                 },
                 didClose: () => {
-                    // Fokus kembali setelah alert ditutup
                     setTimeout(() => cardInput.focus(), 100);
                 }
             });
@@ -470,11 +485,9 @@
                 });
                 const result = await response.json();
                 
-                // Reset interface dulu sebelum alert
                 resetInterface();
                 cardInput.disabled = false;
                 
-                // Tampilkan alert
                 showStatus(response.ok, result.message, result);
 
                 if (response.ok) {
@@ -482,17 +495,28 @@
                 }
 
             } catch (error) {
-                // Reset interface dulu sebelum alert
                 resetInterface();
                 cardInput.disabled = false;
-                
                 showStatus(false, 'Terjadi masalah koneksi.');
             }
         });
+
+        const refreshCsrfToken = async () => {
+            try {
+                const response = await fetch("{{ route('refresh.csrf') }}");
+                const data = await response.json();
+                document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.csrf_token);
+                console.log('CSRF token has been refreshed.');
+            } catch (error) {
+                console.error('Failed to refresh CSRF token:', error);
+            }
+        };
         
+        // Panggilan awal dan interval
         fetchAndUpdateMenus();
-        setInterval(fetchAndUpdateMenus, 30000);
+        setInterval(fetchAndUpdateMenus, 30000); // Refresh menu setiap 30 detik
         setInterval(updateClock, 1000);
+        setInterval(refreshCsrfToken, 3600000); // Refresh CSRF token setiap 1 jam
         updateClock();
     });
     </script>
