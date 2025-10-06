@@ -297,9 +297,9 @@
             </div>
             <div class="divider"></div>
             <div class="input-section">
-                <label for="card-number-input"><i class="fas fa-id-card"></i> Tap Kartu Karyawan</label>
+                <label for="card-number-input"><i class="fas fa-id-card"></i> TEMPELKAN KARTU DI CARD READER</label>
                 <form id="tapping-form" onsubmit="return false;">
-                    <input type="text" id="card-number-input" class="card-input" placeholder="TAP KARTU DI SINI..." autofocus autocomplete="off">
+                    <input type="text" id="card-number-input" class="card-input" placeholder="ID Kartu Karyawan...." autofocus autocomplete="off">
                 </form>
             </div>
         </div>
