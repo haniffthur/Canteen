@@ -214,47 +214,65 @@
         };
 
         const renderOrderHistory = () => {
-            historyListDisplay.innerHTML = orderHistory.map(order => {
-                const historyMenuHtml = order.menus.map(menu => {
-                    const isMain = ['utama', 'spesial'].includes(menu.category);
-                    return `<li class="${isMain ? 'main' : ''}"><i class="fas fa-xs fa-circle"></i> ${menu.name}</li>`;
-                }).join('');
+        historyListDisplay.innerHTML = orderHistory.map(order => {
+            // BARU: Urutkan menu di riwayat juga
+            order.menus.sort((a, b) => {
+                const isMainA = ['utama', 'spesial'].includes(a.category);
+                const isMainB = ['utama', 'spesial'].includes(b.category);
+                if (isMainA && !isMainB) return -1;
+                if (!isMainA && isMainB) return 1;
+                return 0;
+            });
 
-                return `
-                    <div class="history-ticket fade-in">
-                        <div class="history-ticket-header">
-                            <div class="employee-name-history">${order.employee_name}</div>
-                            <div class="order-time-history">${order.tapped_at}</div>
-                        </div>
-                        <ul class="history-menu-list">
-                            ${historyMenuHtml}
-                        </ul>
-                    </div>
-                `;
-            }).join('');
-        };
-
-        const createOrderTicketElement = (order) => {
-            const menuHtml = order.menus.map(menu => {
+            const historyMenuHtml = order.menus.map(menu => {
                 const isMain = ['utama', 'spesial'].includes(menu.category);
-                return `
-                    <li class="menu-item ${isMain ? 'main-menu' : ''}">
-                        <i class="menu-icon ${isMain ? 'fas fa-star' : 'fas fa-plus'}"></i>
-                        <span class="menu-text">${menu.name}</span>
-                    </li>
-                `;
+                return `<li class="${isMain ? 'main' : ''}"><i class="fas fa-xs fa-circle"></i> ${menu.name}</li>`;
             }).join('');
 
             return `
-                <div class="order-ticket fade-in">
-                    <div class="ticket-header">
-                        <div class="employee-name">${order.employee_name}</div>
-                        <div class="order-time">${order.tapped_at}</div>
+                <div class="history-ticket fade-in">
+                    <div class="history-ticket-header">
+                        <div class="employee-name-history">${order.employee_name}</div>
+                        <div class="order-time-history">${order.tapped_at}</div>
                     </div>
-                    <ul class="menu-list">${menuHtml}</ul>
+                    <ul class="history-menu-list">
+                        ${historyMenuHtml}
+                    </ul>
                 </div>
             `;
-        };
+        }).join('');
+    };
+
+        const createOrderTicketElement = (order) => {
+        // BARU: Urutkan menu sebelum di-render
+        order.menus.sort((a, b) => {
+            const isMainA = ['utama', 'spesial'].includes(a.category);
+            const isMainB = ['utama', 'spesial'].includes(b.category);
+            if (isMainA && !isMainB) return -1; // a (menu utama) ditaruh sebelum b
+            if (!isMainA && isMainB) return 1;  // b (menu utama) ditaruh sebelum a
+            return 0; // Jika sama-sama utama atau opsional, biarkan urutan aslinya
+        });
+
+        const menuHtml = order.menus.map(menu => {
+            const isMain = ['utama', 'spesial'].includes(menu.category);
+            return `
+                <li class="menu-item ${isMain ? 'main-menu' : ''}">
+                    <i class="menu-icon ${isMain ? 'fas fa-star' : 'fas fa-plus'}"></i>
+                    <span class="menu-text">${menu.name}</span>
+                </li>
+            `;
+        }).join('');
+
+        return `
+            <div class="order-ticket fade-in">
+                <div class="ticket-header">
+                    <div class="employee-name">${order.employee_name}</div>
+                    <div class="order-time">${order.tapped_at}</div>
+                </div>
+                <ul class="menu-list">${menuHtml}</ul>
+            </div>
+        `;
+    };
 
         function updateClock() {
             const timeString = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
